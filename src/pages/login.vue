@@ -67,7 +67,7 @@
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" @click="login">立即登录</button>
+                  <button class="layui-btn" type="button" @click="login(validate)">立即登录</button>
                   <span style="padding-left: 20px">
                     <RouterLink :to="{ path: '/forget' }">忘记密码？</RouterLink>
                   </span>
@@ -82,7 +82,6 @@
 </template>
 
 <script lang="ts" setup>
-import axios from 'axios'
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
 import { getCode } from '@/api/login'
@@ -94,7 +93,13 @@ const state = reactive({
 })
 const { username, password, code, svg } = toRefs(state)
 
-const login = async () => {}
+const login = async (validate: any) => {
+  const { valid } = await validate()
+  if (!valid) {
+    console.log('校验失败')
+    return
+  }
+}
 onMounted(() => {
   _getCode()
 })

@@ -109,7 +109,9 @@
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" lay-submit>立即注册</button>
+                  <button class="layui-btn" lay-submit type="button" @click="submit(validate)">
+                    立即注册
+                  </button>
                 </div>
               </Form>
             </div>
@@ -141,6 +143,15 @@ const _getCode = () => {
   getCode().then((res) => {
     state.svg = res.msg
   })
+}
+const submit = async (validate: any) => {
+  const { valid } = await validate()
+  if (!valid) {
+    console.log('校验失败')
+    return
+  }
+
+  console.log('登录成功')
 }
 </script>
 

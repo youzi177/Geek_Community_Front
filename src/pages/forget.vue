@@ -91,7 +91,9 @@
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" lay-submit>提交</button>
+                  <button class="layui-btn" lay-submit type="button" @click="submit(validate)">
+                    提交
+                  </button>
                 </div>
               </Form>
             </div>
@@ -103,8 +105,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getCode } from '@/api/login'
-import axios from 'axios'
+import { getCode, forget } from '@/api/login'
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
 const state = reactive({
@@ -119,6 +120,22 @@ onMounted(() => {
 const _getCode = () => {
   getCode().then((res) => {
     state.svg = res.msg
+  })
+}
+const submit = async (validate: any) => {
+  const { valid } = await validate()
+  if (!valid) {
+    console.log('校验失败')
+    return
+  }
+  forget({
+    username: state.username,
+    code: state.code,
+  }).then((res) => {
+    console.log(res)
+    if (res.code === 200) {
+      alert(res.msg)
+    }
   })
 }
 </script>
