@@ -4,7 +4,7 @@
 
 该仓库为项目的PC前端，应用为多端应用，以下是项目的其他端：
 
-后端地址：开发中...
+后端地址：https://github.com/youzi177/Geek_Community_Koa
 
 后台管理系统：开发中...
 

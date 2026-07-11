@@ -12,4 +12,10 @@ import '@/assets/css/global.css'
 import '@/assets/layui/css/modules/layer/default/layer.css'
 </script>
 
-<style></style>
+<style>
+.svg svg {
+  position: relative;
+  top: -12px;
+  height: 50px;
+}
+</style>

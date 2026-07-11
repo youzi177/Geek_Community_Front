@@ -49,43 +49,51 @@
           -->
 
             <div class="layui-form layui-form-pane">
-              <form method="post">
+              <Form ref="object" v-slot="{ validate, errors }">
                 <div class="layui-form-item">
                   <label for="L_email" class="layui-form-label">邮箱</label>
                   <div class="layui-input-inline">
-                    <input
+                    <Field
                       type="text"
-                      id="L_email"
-                      name="email"
-                      required
-                      lay-verify="required"
+                      as="input"
+                      name="username"
+                      rules="required|email"
+                      placeholder="请输入用户名(邮箱)"
                       autocomplete="off"
                       class="layui-input"
+                      v-model="username"
                     />
+                  </div>
+                  <!-- 错误信息展示 -->
+                  <div class="layui-form-mid">
+                    <span style="color: #c00">{{ errors.username }}</span>
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <label for="L_vercode" class="layui-form-label">人类验证</label>
+                  <label for="L_vercode" class="layui-form-label">验证码</label>
                   <div class="layui-input-inline">
-                    <input
+                    <Field
                       type="text"
-                      id="L_vercode"
-                      name="vercode"
-                      required
-                      lay-verify="required"
-                      placeholder="请回答后面的问题"
+                      as="input"
+                      name="code"
+                      placeholder="请输入验证码"
+                      rules="required|length:4"
                       autocomplete="off"
                       class="layui-input"
+                      v-model="code"
                     />
+                  </div>
+                  <div>
+                    <span class="svg" style="color: #c00" @click="_getCode" v-html="svg"></span>
                   </div>
                   <div class="layui-form-mid">
-                    <span style="color: #c00">验证码</span>
+                    <span style="color: #c00">{{ errors.code }}</span>
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" alert="1" lay-filter="*" lay-submit>提交</button>
+                  <button class="layui-btn" lay-submit>提交</button>
                 </div>
-              </form>
+              </Form>
             </div>
           </div>
         </div>
@@ -94,6 +102,26 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import axios from 'axios'
+import { Field, Form } from 'vee-validate'
+import { onMounted, reactive, toRefs } from 'vue'
+const state = reactive({
+  username: '',
+  code: '',
+  svg: '',
+})
+const { username, code, svg } = toRefs(state)
+onMounted(() => {
+  axios.get('http://localhost:3000/public/getCaptcha').then((res) => {
+    state.svg = res.data.msg
+  })
+})
+const _getCode = () => {
+  axios.get('http://localhost:3000/public/getCaptcha').then((res) => {
+    state.svg = res.data.msg
+  })
+}
+</script>
 
 <style></style>
