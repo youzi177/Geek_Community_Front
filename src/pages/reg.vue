@@ -121,6 +121,7 @@
 </template>
 
 <script lang="ts" setup>
+import { getCode } from '@/api/login'
 import axios from 'axios'
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
@@ -134,13 +135,11 @@ const state = reactive({
 const { username, password, repassword, code, svg } = toRefs(state)
 
 onMounted(() => {
-  axios.get('http://localhost:3000/public/getCaptcha').then((res) => {
-    state.svg = res.data.msg
-  })
+  _getCode()
 })
 const _getCode = () => {
-  axios.get('http://localhost:3000/public/getCaptcha').then((res) => {
-    state.svg = res.data.msg
+  getCode().then((res) => {
+    state.svg = res.msg
   })
 }
 </script>
