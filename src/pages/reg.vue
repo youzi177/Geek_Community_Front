@@ -21,6 +21,7 @@
                       rules="required|email"
                       autocomplete="off"
                       class="layui-input"
+                      v-model="username"
                     />
                   </div>
                   <div class="layui-form-mid layui-word-aux">将会成为您唯一的登入名</div>
@@ -40,7 +41,7 @@
                       name="name"
                       autocomplete="off"
                       class="layui-input"
-                      v-model="username"
+                      v-model="name"
                     />
                   </div>
                   <div class="layui-form-mid">
@@ -124,7 +125,7 @@
 
 <script lang="ts" setup>
 import { getCode } from '@/api/login'
-import axios from 'axios'
+
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
 const state = reactive({
@@ -133,8 +134,9 @@ const state = reactive({
   repassword: '',
   code: '',
   svg: '',
+  name: '',
 })
-const { username, password, repassword, code, svg } = toRefs(state)
+const { name, username, password, repassword, code, svg } = toRefs(state)
 
 onMounted(() => {
   _getCode()
@@ -150,6 +152,8 @@ const submit = async (validate: any) => {
     console.log('校验失败')
     return
   }
+
+  console.log(state.username, state.password, state.name)
 
   console.log('登录成功')
 }
