@@ -9,7 +9,7 @@
         <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0">
           <div class="layui-tab-item layui-show">
             <div class="layui-form layui-form-pane">
-              <Form ref="object" v-slot="{ validate, errors }">
+              <Form @submit="submit" v-slot="{ errors }">
                 <div class="layui-form-item">
                   <label for="L_email" class="layui-form-label">用户名</label>
                   <div class="layui-input-inline">
@@ -67,7 +67,7 @@
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" type="button" @click="login(validate)">立即登录</button>
+                  <button class="layui-btn" type="submit">立即登录</button>
                   <span style="padding-left: 20px">
                     <RouterLink :to="{ path: '/forget' }">忘记密码？</RouterLink>
                   </span>
@@ -96,12 +96,14 @@ const state = reactive({
 })
 const { username, password, code, svg } = toRefs(state)
 //登录
-const login = async (validate: any) => {
-  const { valid } = await validate()
-  if (!valid) {
-    console.log('校验失败')
-    return
-  }
+const submit = async (value: any, actions: any) => {
+  console.log(value, actions)
+
+  const { setErrors } = actions
+  setErrors({
+    username: '哈哈哈哈哈',
+    code: '验证码错误',
+  })
 }
 //验证码
 onMounted(() => {

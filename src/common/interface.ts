@@ -1,6 +1,7 @@
 export interface ForgetInfo {
   username: string
   code: string
+  sid: string
 }
 //后端返回的数据格式
 export interface HttpResponse {

@@ -49,7 +49,7 @@
           -->
 
             <div class="layui-form layui-form-pane">
-              <Form ref="object" v-slot="{ validate, errors }">
+              <Form @submit="submit" v-slot="{ errors }">
                 <div class="layui-form-item">
                   <label for="L_email" class="layui-form-label">邮箱</label>
                   <div class="layui-input-inline">
@@ -91,9 +91,7 @@
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" lay-submit type="button" @click="submit(validate)">
-                    提交
-                  </button>
+                  <button class="layui-btn" lay-submit type="submit">提交</button>
                 </div>
               </Form>
             </div>
@@ -110,6 +108,7 @@ import type { HttpResponse } from '@/common/interface'
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
+import { useSidStore } from '@/stores'
 const state = reactive({
   username: '',
   code: '',
@@ -133,20 +132,21 @@ const _getCode = async () => {
     state.svg = data as string
   }
 }
-const submit = async (validate: any) => {
-  const { valid } = await validate()
-  if (!valid) {
-    console.log('校验失败')
-    return
-  }
-  const result = await forget({ username: state.username, code: state.code })
-  console.log(result)
+const submit = async (value: any, actions: any) => {
+  const { setErrors } = actions
+  const result = await forget({
+    username: state.username,
+    code: state.code,
+    sid: useSidStore().sid,
+  })
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse
-  console.log(code)
-
   if (code === 200) {
     alert(msg)
+  } else if (code === 401) {
+    setErrors({
+      code: msg,
+    })
   }
 
   // forget({
