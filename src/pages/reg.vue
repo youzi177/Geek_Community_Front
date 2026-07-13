@@ -128,6 +128,8 @@ import { getCode } from '@/api/login'
 
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
+import type { HttpResponse } from '@/common/interface'
 const state = reactive({
   username: '',
   password: '',
@@ -142,9 +144,18 @@ onMounted(() => {
   _getCode()
 })
 const _getCode = async () => {
-  const result = await getCode()
-  const { data } = result
-  state.svg = data
+  let sid = ''
+  if (localStorage.getItem('sid')) {
+    sid = localStorage.getItem('sid') || ''
+  } else {
+    sid = uuidv4()
+    localStorage.setItem('sid', sid)
+  }
+  const result = (await getCode(sid)) as HttpResponse
+  const { code, data } = result
+  if (code === 200) {
+    state.svg = data as string
+  }
 }
 const submit = async (validate: any) => {
   const { valid } = await validate()

@@ -85,6 +85,9 @@
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
 import { getCode } from '@/api/login'
+import { v4 as uuidv4 } from 'uuid'
+import type { HttpResponse } from '@/common/interface'
+import { useSidStore } from '@/stores'
 const state = reactive({
   username: '',
   password: '',
@@ -92,7 +95,7 @@ const state = reactive({
   svg: '',
 })
 const { username, password, code, svg } = toRefs(state)
-
+//登录
 const login = async (validate: any) => {
   const { valid } = await validate()
   if (!valid) {
@@ -100,13 +103,31 @@ const login = async (validate: any) => {
     return
   }
 }
+//验证码
 onMounted(() => {
   _getCode()
 })
+//验证码
 const _getCode = async () => {
-  const result = await getCode()
-  const { data } = result
-  state.svg = data
+  let sid = ''
+  //从localStorage取值sid
+  if (localStorage.getItem('sid')) {
+    sid = localStorage.getItem('sid') || ''
+  } else {
+    //没有sid就生成一个并存入localStorage
+    sid = uuidv4()
+    localStorage.setItem('sid', sid)
+  }
+  //存到pinia
+  useSidStore().setSid(sid)
+  //请求验证码
+  const result = (await getCode(sid)) as HttpResponse
+  //解构
+  const { code, data } = result
+  if (code === 200) {
+    state.svg = data as string
+  }
+  const a = useSidStore()
 }
 </script>
 

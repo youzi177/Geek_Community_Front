@@ -29,7 +29,7 @@ class HttpRequest {
     instance.interceptors.request.use(
       (config) => {
         // 在请求发送之前执行某些操作
-        console.log('config', config)
+        // console.log('config', config)
         return config
       },
       (error: AxiosError) => {
@@ -43,7 +43,7 @@ class HttpRequest {
       (res) => {
         // 状态码在 2xx 范围内的响应会触发此函数
         // 处理响应数据
-        console.log('res', res)
+        //console.log('res', res)
         if (res.status === 200) {
           return Promise.resolve(res.data)
         } else {
