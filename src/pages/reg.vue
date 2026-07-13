@@ -141,10 +141,10 @@ const { name, username, password, repassword, code, svg } = toRefs(state)
 onMounted(() => {
   _getCode()
 })
-const _getCode = () => {
-  getCode().then((res) => {
-    state.svg = res.msg
-  })
+const _getCode = async () => {
+  const result = await getCode()
+  const { data } = result
+  state.svg = data
 }
 const submit = async (validate: any) => {
   const { valid } = await validate()

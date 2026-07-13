@@ -103,10 +103,10 @@ const login = async (validate: any) => {
 onMounted(() => {
   _getCode()
 })
-const _getCode = () => {
-  getCode().then((res) => {
-    state.svg = res.msg
-  })
+const _getCode = async () => {
+  const result = await getCode()
+  const { data } = result
+  state.svg = data
 }
 </script>
 

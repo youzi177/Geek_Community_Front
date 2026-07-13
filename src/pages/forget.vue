@@ -106,6 +106,7 @@
 
 <script lang="ts" setup>
 import { getCode, forget } from '@/api/login'
+import type { HttpResponse } from '@/common/interface'
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
 const state = reactive({
@@ -117,10 +118,10 @@ const { username, code, svg } = toRefs(state)
 onMounted(() => {
   _getCode()
 })
-const _getCode = () => {
-  getCode().then((res) => {
-    state.svg = res.msg
-  })
+const _getCode = async () => {
+  const result = await getCode()
+  const { data } = result
+  state.svg = data
 }
 const submit = async (validate: any) => {
   const { valid } = await validate()
@@ -128,15 +129,25 @@ const submit = async (validate: any) => {
     console.log('校验失败')
     return
   }
-  forget({
-    username: state.username,
-    code: state.code,
-  }).then((res) => {
-    console.log(res)
-    if (res.code === 200) {
-      alert(res.msg)
-    }
-  })
+  const result = await forget({ username: state.username, code: state.code })
+  console.log(result)
+  //明确告知result就是HttpResponse类型
+  const { code, msg } = result as HttpResponse
+  console.log(code)
+
+  if (code === 200) {
+    alert(msg)
+  }
+
+  // forget({
+  //   username: state.username,
+  //   code: state.code,
+  // }).then((res) => {
+  //   console.log(res)
+  //   if (res.code === 200) {
+  //     alert(res.msg)
+  //   }
+  // })
 }
 </script>
 
