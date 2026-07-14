@@ -9,7 +9,7 @@
         <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0">
           <div class="layui-tab-item layui-show">
             <div class="layui-form layui-form-pane">
-              <Form ref="object" v-slot="{ validate, errors }">
+              <Form @submit="submit" v-slot="{ errors }">
                 <div class="layui-form-item">
                   <label for="L_email" class="layui-form-label">用户名</label>
                   <div class="layui-input-inline">
@@ -110,9 +110,7 @@
                   </div>
                 </div>
                 <div class="layui-form-item">
-                  <button class="layui-btn" lay-submit type="button" @click="submit(validate)">
-                    立即注册
-                  </button>
+                  <button class="layui-btn" lay-submit type="submit">立即注册</button>
                 </div>
               </Form>
             </div>
@@ -124,49 +122,42 @@
 </template>
 
 <script lang="ts" setup>
-import { getCode } from '@/api/login'
+import { reg } from '@/api/login'
 
 import { Field, Form } from 'vee-validate'
-import { onMounted, reactive, toRefs } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
+import { onMounted, toRefs } from 'vue'
+
+import Uselogin from '@/hooks/Uselogin'
+import { useSidStore } from '@/stores'
 import type { HttpResponse } from '@/common/interface'
-const state = reactive({
-  username: '',
-  password: '',
-  repassword: '',
-  code: '',
-  svg: '',
-  name: '',
-})
+//封装函数
+const { state, _getCode, setid } = Uselogin()
 const { name, username, password, repassword, code, svg } = toRefs(state)
 
+//挂载时执行
 onMounted(() => {
+  setid()
   _getCode()
 })
-const _getCode = async () => {
-  let sid = ''
-  if (localStorage.getItem('sid')) {
-    sid = localStorage.getItem('sid') || ''
-  } else {
-    sid = uuidv4()
-    localStorage.setItem('sid', sid)
-  }
-  const result = (await getCode(sid)) as HttpResponse
-  const { code, data } = result
+//注册
+const submit = async (value: any, actions: any) => {
+  const { setErrors } = actions
+  const result = await reg({
+    username: state.username,
+    password: state.password,
+    name: state.name,
+    code: state.code,
+    sid: useSidStore().sid,
+  })
+  //明确告知result就是HttpResponse类型
+  const { code, msg } = result as HttpResponse
   if (code === 200) {
-    state.svg = data as string
+    alert(msg)
+  } else if (code === 401) {
+    setErrors({
+      code: msg,
+    })
   }
-}
-const submit = async (validate: any) => {
-  const { valid } = await validate()
-  if (!valid) {
-    console.log('校验失败')
-    return
-  }
-
-  console.log(state.username, state.password, state.name)
-
-  console.log('登录成功')
 }
 </script>
 

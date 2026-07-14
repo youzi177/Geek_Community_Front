@@ -103,35 +103,22 @@
 </template>
 
 <script lang="ts" setup>
-import { getCode, forget } from '@/api/login'
+import { forget } from '@/api/login'
 import type { HttpResponse } from '@/common/interface'
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
 import { useSidStore } from '@/stores'
-const state = reactive({
-  username: '',
-  code: '',
-  svg: '',
-})
+import Uselogin from '@/hooks/Uselogin'
+//封装函数
+const { state, _getCode, setid } = Uselogin()
+
 const { username, code, svg } = toRefs(state)
 onMounted(() => {
+  setid()
   _getCode()
 })
-const _getCode = async () => {
-  let sid = ''
-  if (localStorage.getItem('sid')) {
-    sid = localStorage.getItem('sid') || ''
-  } else {
-    sid = uuidv4()
-    localStorage.setItem('sid', sid)
-  }
-  const result = (await getCode(sid)) as HttpResponse
-  const { code, data } = result
-  if (code === 200) {
-    state.svg = data as string
-  }
-}
+
+//找回密码
 const submit = async (value: any, actions: any) => {
   const { setErrors } = actions
   const result = await forget({
@@ -148,16 +135,6 @@ const submit = async (value: any, actions: any) => {
       code: msg,
     })
   }
-
-  // forget({
-  //   username: state.username,
-  //   code: state.code,
-  // }).then((res) => {
-  //   console.log(res)
-  //   if (res.code === 200) {
-  //     alert(res.msg)
-  //   }
-  // })
 }
 </script>
 

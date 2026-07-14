@@ -83,54 +83,39 @@
 
 <script lang="ts" setup>
 import { Field, Form } from 'vee-validate'
-import { onMounted, reactive, toRefs } from 'vue'
-import { getCode } from '@/api/login'
-import { v4 as uuidv4 } from 'uuid'
-import type { HttpResponse } from '@/common/interface'
+import { onMounted, toRefs } from 'vue'
+import Uselogin from '@/hooks/Uselogin'
+import { login } from '@/api/login'
 import { useSidStore } from '@/stores'
-const state = reactive({
-  username: '',
-  password: '',
-  code: '',
-  svg: '',
-})
+import type { HttpResponse } from '@/common/interface'
+//封装函数
+const { state, _getCode, setid } = Uselogin()
 const { username, password, code, svg } = toRefs(state)
+
 //登录
 const submit = async (value: any, actions: any) => {
-  console.log(value, actions)
-
   const { setErrors } = actions
-  setErrors({
-    username: '哈哈哈哈哈',
-    code: '验证码错误',
+  const result = await login({
+    username: state.username,
+    password: state.password,
+    code: state.code,
+    sid: useSidStore().sid,
   })
+  //明确告知result就是HttpResponse类型
+  const { code, msg } = result as HttpResponse
+  if (code === 200) {
+    alert(msg)
+  } else if (code === 401) {
+    setErrors({
+      code: msg,
+    })
+  }
 }
-//验证码
+//挂载时执行
 onMounted(() => {
+  setid()
   _getCode()
 })
-//验证码
-const _getCode = async () => {
-  let sid = ''
-  //从localStorage取值sid
-  if (localStorage.getItem('sid')) {
-    sid = localStorage.getItem('sid') || ''
-  } else {
-    //没有sid就生成一个并存入localStorage
-    sid = uuidv4()
-    localStorage.setItem('sid', sid)
-  }
-  //存到pinia
-  useSidStore().setSid(sid)
-  //请求验证码
-  const result = (await getCode(sid)) as HttpResponse
-  //解构
-  const { code, data } = result
-  if (code === 200) {
-    state.svg = data as string
-  }
-  const a = useSidStore()
-}
 </script>
 
 <style></style>

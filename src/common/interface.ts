@@ -3,6 +3,21 @@ export interface ForgetInfo {
   code: string
   sid: string
 }
+
+export interface LoginInfo {
+  password: string
+  username: string
+  code: string
+  sid: string
+}
+export interface RegInfo {
+  password: string
+  username: string
+  name: string
+  repassword?: string
+  code: string
+  sid: string
+}
 //后端返回的数据格式
 export interface HttpResponse {
   code: number
