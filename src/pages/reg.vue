@@ -153,10 +153,8 @@ const submit = async (value: any, actions: any) => {
   const { code, msg } = result as HttpResponse
   if (code === 200) {
     alert(msg)
-  } else if (code === 401) {
-    setErrors({
-      code: msg,
-    })
+  } else if (code === 500) {
+    setErrors(msg)
   }
 }
 </script>

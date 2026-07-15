@@ -109,6 +109,8 @@ const submit = async (value: any, actions: any) => {
     setErrors({
       code: msg,
     })
+  } else if (code === 404) {
+    alert(msg)
   }
 }
 //挂载时执行
