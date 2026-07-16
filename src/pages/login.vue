@@ -88,6 +88,9 @@ import Uselogin from '@/hooks/Uselogin'
 import { login } from '@/api/login'
 import { useSidStore } from '@/stores'
 import type { HttpResponse } from '@/common/interface'
+import { myalert, myconfirm } from '@/components/modules/alert'
+import router from '@/router'
+
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { username, password, code, svg } = toRefs(state)
@@ -104,15 +107,19 @@ const submit = async (value: any, actions: any) => {
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse
   if (code === 200) {
-    alert(msg)
+    state.username = ''
+    state.password = ''
+    state.code = ''
+    router.push({ name: 'index' })
   } else if (code === 401) {
     setErrors({
       code: msg,
     })
   } else if (code === 404) {
-    alert(msg)
+    myalert(msg as string)
   }
 }
+
 //挂载时执行
 onMounted(() => {
   setid()

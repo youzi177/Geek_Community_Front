@@ -130,6 +130,8 @@ import { onMounted, toRefs } from 'vue'
 import Uselogin from '@/hooks/Uselogin'
 import { useSidStore } from '@/stores'
 import type { HttpResponse } from '@/common/interface'
+import { myalert } from '@/components/modules/alert'
+import router from '@/router'
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { name, username, password, repassword, code, svg } = toRefs(state)
@@ -152,8 +154,9 @@ const submit = async (value: any, actions: any) => {
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse
   if (code === 200) {
-    alert(msg)
-  } else if (code === 500) {
+    myalert(msg as string)
+    router.push({ name: 'login' })
+  } else if (code === 401) {
     setErrors(msg)
   }
 }
