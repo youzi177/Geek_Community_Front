@@ -86,7 +86,7 @@ import { Field, Form } from 'vee-validate'
 import { onMounted, toRefs } from 'vue'
 import Uselogin from '@/hooks/Uselogin'
 import { login } from '@/api/login'
-import { useSidStore } from '@/stores'
+import { useAuthStore } from '@/stores'
 import type { HttpResponse } from '@/common/interface'
 import { myalert, myconfirm } from '@/components/modules/alert'
 import router from '@/router'
@@ -102,7 +102,7 @@ const submit = async (value: any, actions: any) => {
     username: state.username,
     password: state.password,
     code: state.code,
-    sid: useSidStore().sid,
+    sid: useAuthStore().sid,
   })
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse

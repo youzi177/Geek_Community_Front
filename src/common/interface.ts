@@ -18,6 +18,15 @@ export interface RegInfo {
   code: string
   sid: string
 }
+export interface getListInfo {
+  type: string
+  page: string
+  limit?: string
+  catalog?: string
+  sort?: string
+  status?: string
+}
+
 //后端返回的数据格式
 export interface HttpResponse {
   code: number

@@ -1,7 +1,10 @@
 <template>
-  <div>这是首页</div>
+  <Panel></Panel>
+  <RouterView></RouterView>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import Panel from '@/components/Panel.vue'
+</script>
 
 <style></style>

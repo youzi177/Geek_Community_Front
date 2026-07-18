@@ -1,4 +1,4 @@
-import { useSidStore } from '@/stores'
+import { useAuthStore } from '@/stores'
 import { reactive } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { getCode } from '@/api/login'
@@ -26,11 +26,11 @@ export default () => {
       localStorage.setItem('sid', sid)
       //存到pinia
     }
-    useSidStore().setSid(sid)
+    useAuthStore().setSid(sid)
   }
   //发送验证码
   const _getCode = async () => {
-    const sid = useSidStore().sid
+    const sid = useAuthStore().sid
     //请求验证码
     const result = (await getCode(sid)) as HttpResponse
     //解构

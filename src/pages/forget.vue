@@ -107,7 +107,7 @@ import { forget } from '@/api/login'
 import type { HttpResponse } from '@/common/interface'
 import { Field, Form } from 'vee-validate'
 import { onMounted, reactive, toRefs } from 'vue'
-import { useSidStore } from '@/stores'
+import { useAuthStore } from '@/stores'
 import Uselogin from '@/hooks/Uselogin'
 //封装函数
 const { state, _getCode, setid } = Uselogin()
@@ -124,7 +124,7 @@ const submit = async (value: any, actions: any) => {
   const result = await forget({
     username: state.username,
     code: state.code,
-    sid: useSidStore().sid,
+    sid: useAuthStore().sid,
   })
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse
