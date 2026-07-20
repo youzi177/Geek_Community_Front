@@ -30,7 +30,8 @@ export interface getListInfo {
 //后端返回的数据格式
 export interface HttpResponse {
   code: number
-  //unknown：需要类型判断后才能使用
-  data?: unknown
+  //data不知道返回的什么数据
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any
   msg?: string
 }

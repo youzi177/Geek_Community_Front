@@ -43,9 +43,10 @@
       </li>
     </ul>
     <div style="text-align: center" v-show="isShow">
-      <div class="laypage-main">
+      <div class="laypage-main" v-if="!isEnd">
         <a @click.prevent="more" class="laypage-next">更多求解</a>
       </div>
+      <div class="nomore gray" v-else>我也是有底线的~~~</div>
     </div>
   </div>
 </template>
@@ -57,9 +58,10 @@ import { formatDate } from '@/utils/formatDate'
 interface Props {
   list: Array<any> //文章的信息
   isShow?: boolean
+  isEnd?: boolean
 }
 //3.5写法
-const { list, isShow = true } = defineProps<Props>()
+const { list, isShow = true, isEnd = false } = defineProps<Props>()
 //计算属性
 const items = computed(() => {
   _.map(list, (item) => {
@@ -93,4 +95,9 @@ const more = () => {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.nomore {
+  font-size: 16px;
+  padding: 30px 0;
+}
+</style>

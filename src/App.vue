@@ -18,4 +18,7 @@ import '@/assets/layui/css/modules/layer/default/layer.css'
   top: -12px;
   height: 50px;
 }
+.gray {
+  color: #999;
+}
 </style>

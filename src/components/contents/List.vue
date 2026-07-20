@@ -16,7 +16,7 @@
         <a :class="{ 'layui-this': sort === 'answer' }" @click.prevent="search(4)">按热议</a>
       </span>
     </div>
-    <ListItem :list="lists" @next-page="nextPage"></ListItem>
+    <ListItem :list="lists" @next-page="nextPage" :isEnd="query.isEnd"></ListItem>
   </div>
 </template>
 
@@ -24,6 +24,7 @@
 import { onMounted, reactive, toRefs } from 'vue'
 import ListItem from './ListItem.vue'
 import { getList } from '@/api/content.ts'
+import type { HttpResponse } from '@/common/interface.ts'
 const query = reactive({
   status: '', //状态
   tag: '', //标签，精华
@@ -87,6 +88,8 @@ const query = reactive({
       answer: '100',
     },
   ], //文章详情
+  isEnd: false, //是否最后一页
+  isRepeat: false, //请求锁
 })
 const { status, tag, sort, lists } = toRefs(query)
 //查询
@@ -117,22 +120,48 @@ const search = (val?: number) => {
   }
 }
 //获取文章列表
-// const _getList = () => {
-//   const options = {
-//     catalog: query.catlog,
-//     isTop: 0,
-//     page: query.page,
-//     limit: query.limit,
-//     sort: query.sort,
-//     status: query.status,
-//   }
-//   const res = getList(options)
-// }
-// onMounted(_getList())
+const _getList = async () => {
+  if (query.isEnd) return
+  const options = {
+    catalog: query.catlog,
+    isTop: 0,
+    page: query.page,
+    limit: query.limit,
+    sort: query.sort,
+    status: query.status,
+  }
+  if (query.isRepeat) return //判断是不是锁上了，true锁上，直接return，否则的话继续执行
+  try {
+    query.isRepeat = true //请求之后把请求锁 锁上
+    const result = await getList(options)
+    //明确告知result就是HttpResponse类型
+    const { code, data } = result as HttpResponse
+    if (code === 200) {
+      query.isRepeat = false //数据请求完成之后，把锁打开
+      //如果小于一页的数据，就是最后一页了
+      if (data.length < query.limit) {
+        query.isEnd = true
+      }
+      //判断页面有没有数据，没有就直接赋值
+      if (query.lists.length === 0) {
+        query.lists = result.data
+      } else {
+        //页面有数据就concat追加
+        query.lists = query.lists.concat(data)
+      }
+    }
+  } catch (error) {
+    //console.log(error);
+
+    //错误了也要先把锁打开
+    query.isRepeat = false
+  }
+}
+onMounted(_getList())
 //下一页
 const nextPage = () => {
   query.page++
-  // _getList()
+  _getList()
 }
 </script>
 
