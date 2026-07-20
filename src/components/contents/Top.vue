@@ -1,5 +1,5 @@
 <template>
-  <div class="fly-panel">
+  <div class="fly-panel" v-show="lists.length > 0">
     <div class="fly-panel-title fly-filter">
       <a>置顶</a>
       <a
@@ -10,153 +10,66 @@
         >去签到</a
       >
     </div>
-    <ul class="fly-list">
-      <li>
-        <a href="user/home.html" class="fly-avatar">
-          <img
-            src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-            alt="贤心"
-          />
-        </a>
-        <h2>
-          <a class="layui-badge">动态</a>
-          <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-        </h2>
-        <div class="fly-list-info">
-          <a href="user/home.html" link>
-            <cite>贤心</cite>
-            <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-            <i class="layui-badge fly-badge-vip">VIP3</i>
-          </a>
-          <span>刚刚</span>
-
-          <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"
-            ><i class="iconfont icon-kiss"></i> 60</span
-          >
-          <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
-          <span class="fly-list-nums">
-            <i class="iconfont icon-pinglun1" title="回答"></i> 66
-          </span>
-        </div>
-        <div class="fly-list-badge">
-          <!--
-              <span class="layui-badge layui-bg-black">置顶</span>
-              <span class="layui-badge layui-bg-red">精帖</span>
-              -->
-        </div>
-      </li>
-      <li>
-        <a href="user/home.html" class="fly-avatar">
-          <img
-            src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-            alt="贤心"
-          />
-        </a>
-        <h2>
-          <a class="layui-badge">公告</a>
-          <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-        </h2>
-        <div class="fly-list-info">
-          <a href="user/home.html" link>
-            <cite>贤心</cite>
-            <!--
-                <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                <i class="layui-badge fly-badge-vip">VIP3</i>
-                -->
-          </a>
-          <span>2017-11-30</span>
-
-          <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"
-            ><i class="iconfont icon-kiss"></i> 60</span
-          >
-          <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
-          <span class="fly-list-nums">
-            <i class="iconfont icon-pinglun1" title="回答"></i> 66
-          </span>
-        </div>
-        <div class="fly-list-badge">
-          <!--
-              <span class="layui-badge layui-bg-black">置顶</span>
-              <span class="layui-badge layui-bg-red">精帖</span>
-              -->
-        </div>
-      </li>
-      <li>
-        <a href="user/home.html" class="fly-avatar">
-          <img
-            src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-            alt="贤心"
-          />
-        </a>
-        <h2>
-          <a class="layui-badge">公告</a>
-          <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-        </h2>
-        <div class="fly-list-info">
-          <a href="user/home.html" link>
-            <cite>贤心</cite>
-            <!--
-                <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                <i class="layui-badge fly-badge-vip">VIP3</i>
-                -->
-          </a>
-          <span>刚刚</span>
-
-          <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"
-            ><i class="iconfont icon-kiss"></i> 60</span
-          >
-          <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
-          <span class="fly-list-nums">
-            <i class="iconfont icon-pinglun1" title="回答"></i> 66
-          </span>
-        </div>
-        <div class="fly-list-badge">
-          <!--
-              <span class="layui-badge layui-bg-black">置顶</span>
-              <span class="layui-badge layui-bg-red">精帖</span>
-              -->
-        </div>
-      </li>
-      <li>
-        <a href="user/home.html" class="fly-avatar">
-          <img
-            src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-            alt="贤心"
-          />
-        </a>
-        <h2>
-          <a class="layui-badge">公告</a>
-          <a href="jie/detail.html">基于 layui 的极简社区页面模版</a>
-        </h2>
-        <div class="fly-list-info">
-          <a href="user/home.html" link>
-            <cite>贤心</cite>
-            <!--
-                <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                <i class="layui-badge fly-badge-vip">VIP3</i>
-                -->
-          </a>
-          <span>刚刚</span>
-
-          <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"
-            ><i class="iconfont icon-kiss"></i> 60</span
-          >
-          <!--<span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>-->
-          <span class="fly-list-nums">
-            <i class="iconfont icon-pinglun1" title="回答"></i> 66
-          </span>
-        </div>
-        <div class="fly-list-badge">
-          <!--
-              <span class="layui-badge layui-bg-black">置顶</span>
-              <span class="layui-badge layui-bg-red">精帖</span>
-              -->
-        </div>
-      </li>
-    </ul>
+    <ListItem :list="lists" :is-show="false"></ListItem>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { onMounted, reactive, toRefs } from 'vue'
+import ListItem from './ListItem.vue'
+import { getList } from '@/api/content.ts'
+const query = reactive({
+  page: 0,
+  limit: 20,
+  lists: [
+    {
+      uid: {
+        isVip: 8,
+        name: '用户昵称',
+      },
+      title: '帖子的标题',
+      content: '',
+      created: '2019-10-01 00:00:00',
+      catalog: 'ask',
+      fav: '40',
+      isEnd: '0',
+      reasds: '10',
+      status: '0',
+      isTop: '0',
+      tags: [
+        {
+          name: '精华',
+          class: 'layui-bg-red',
+        },
+        {
+          name: '热门',
+          class: 'layui-bg-blue',
+        },
+      ],
+      sort: '0',
+      answer: '0',
+    },
+  ],
+})
+const { lists } = toRefs(query)
+//下一页
+const nextPage = () => {
+  query.page++
+  // _getList()
+}
+//获取文章列表
+// const _getList = () => {
+//   const options = {
+//     catalog: query.catlog,
+//     isTop: 0,
+//     page: query.page,
+//     limit: query.limit,
+//     sort: query.sort,
+//     status: query.status,
+//   }
+//   const res = getList(options)
+// }
+// onMounted(_getList())
+</script>
 
 <style></style>

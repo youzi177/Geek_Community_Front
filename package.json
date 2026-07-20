@@ -15,10 +15,13 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.24",
     "@vee-validate/i18n": "^4.15.1",
     "@vee-validate/rules": "^4.15.1",
     "@vee-validate/yup": "^4.15.1",
     "axios": "^1.18.1",
+    "dayjs": "^1.11.21",
+    "lodash": "^4.18.1",
     "pinia": "^3.0.4",
     "qs": "^6.15.3",
     "uuid": "^14.0.1",

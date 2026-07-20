@@ -19,9 +19,9 @@ export interface RegInfo {
   sid: string
 }
 export interface getListInfo {
-  type: string
-  page: string
-  limit?: string
+  isTop: number
+  page: number
+  limit?: number
   catalog?: string
   sort?: string
   status?: string
