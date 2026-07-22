@@ -18,58 +18,38 @@
 import { onMounted, reactive, toRefs } from 'vue'
 import ListItem from './ListItem.vue'
 import { getList } from '@/api/content.ts'
+import type { HttpResponse } from '@/common/interface.ts'
 const query = reactive({
-  page: 0,
-  limit: 20,
-  lists: [
-    {
-      uid: {
-        isVip: 8,
-        name: '用户昵称',
-      },
-      title: '帖子的标题',
-      content: '',
-      created: '2019-10-01 00:00:00',
-      catalog: 'ask',
-      fav: '40',
-      isEnd: '0',
-      reasds: '10',
-      status: '0',
-      isTop: '0',
-      tags: [
-        {
-          name: '精华',
-          class: 'layui-bg-red',
-        },
-        {
-          name: '热门',
-          class: 'layui-bg-blue',
-        },
-      ],
-      sort: '0',
-      answer: '0',
-    },
-  ],
+  status: '',
+  tag: '', // 精华标签
+  sort: 'created', // 按最新，按热议
+  page: 0, //
+  limit: 10, // 一页显示10条
+  lists: [], // 文章详情
 })
 const { lists } = toRefs(query)
 //下一页
 const nextPage = () => {
   query.page++
-  // _getList()
+  _getList()
 }
 //获取文章列表
-// const _getList = () => {
-//   const options = {
-//     catalog: query.catlog,
-//     isTop: 0,
-//     page: query.page,
-//     limit: query.limit,
-//     sort: query.sort,
-//     status: query.status,
-//   }
-//   const res = getList(options)
-// }
-// onMounted(_getList())
+const _getList = async () => {
+  const options = {
+    isTop: 1,
+    page: query.page,
+    limit: query.limit,
+    tag: query.tag,
+    sort: query.sort,
+    status: query.status,
+  }
+  const result = await getList(options)
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    query.lists = data
+  }
+}
+onMounted(_getList)
 </script>
 
 <style></style>

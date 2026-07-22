@@ -3,10 +3,7 @@
     <ul class="fly-list">
       <li v-for="(item, index) in items" :key="index">
         <a href="user/home.html" class="fly-avatar">
-          <img
-            src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-            alt="贤心"
-          />
+          <img :src="item.uid.pic" alt="贤心" />
         </a>
         <h2>
           <a class="layui-badge">{{ item.catalog }}</a>
@@ -24,7 +21,7 @@
           <span class="fly-list-kiss layui-hide-xs" title="悬赏飞吻"
             ><i class="iconfont icon-kiss"></i> {{ item.fav }}</span
           >
-          <span class="layui-badge fly-badge-accept layui-hide-xs" v-show="item.status !== 0"
+          <span class="layui-badge fly-badge-accept layui-hide-xs" v-show="item.isEnd !== '0'"
             >已结</span
           >
           <span class="fly-list-nums">
@@ -57,8 +54,8 @@ import _ from 'lodash'
 import { formatDate } from '@/utils/formatDate'
 interface Props {
   list: Array<any> //文章的信息
-  isShow?: boolean
-  isEnd?: boolean
+  isShow?: boolean //是否显示更多求解
+  isEnd?: boolean //是否最后一页
 }
 //3.5写法
 const { list, isShow = true, isEnd = false } = defineProps<Props>()

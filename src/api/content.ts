@@ -7,7 +7,7 @@ import qs from 'qs'
  * @returns
  */
 const getList = (options: getListInfo) => {
-  return axios.get('/public/list? ' + qs.stringify(options))
+  return axios.get('/public/list?' + qs.stringify(options))
 }
 /**
  * 本周热议

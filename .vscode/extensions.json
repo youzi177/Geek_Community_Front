@@ -5,5 +5,6 @@
     "EditorConfig.EditorConfig",
     "oxc.oxc-vscode",
     "esbenp.prettier-vscode"
-  ]
+  ],
+  
 }

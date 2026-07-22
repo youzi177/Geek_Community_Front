@@ -46,9 +46,9 @@ import { useAuthStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 const lists = reactive([
   { name: '提问', path: '/index/ask', isNew: false },
-  { name: '分享', path: '/index/askshare', isNew: false },
+  { name: '分享', path: '/index/share', isNew: false },
   { name: '讨论', path: '/index/discuss', isNew: true },
-  { name: '建议', path: '/index/advuse', isNew: false },
+  { name: '建议', path: '/index/advise', isNew: false },
   { name: '公告', path: '/index/notice', isNew: false },
   { name: '动态', path: '/index/logs', isNew: false },
 ])
