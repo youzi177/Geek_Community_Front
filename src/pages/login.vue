@@ -86,7 +86,7 @@ import { Field, Form } from 'vee-validate'
 import { onMounted, toRefs } from 'vue'
 import Uselogin from '@/hooks/Uselogin'
 import { login } from '@/api/login'
-import { useAuthStore } from '@/stores'
+import { useAuthStore, useUserStore } from '@/stores'
 import type { HttpResponse } from '@/common/interface'
 import { myalert, myconfirm } from '@/components/modules/alert'
 import router from '@/router'
@@ -105,11 +105,13 @@ const submit = async (value: any, actions: any) => {
     sid: useAuthStore().sid,
   })
   //明确告知result就是HttpResponse类型
-  const { code, msg } = result as HttpResponse
+  const { code, msg, data } = result as HttpResponse
   if (code === 200) {
     state.username = ''
     state.password = ''
     state.code = ''
+    useUserStore().setUserInfo(data)
+    useAuthStore().setisLogin(true)
     router.push({ name: 'index' })
   } else if (code === 401) {
     setErrors({

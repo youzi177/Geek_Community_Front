@@ -22,14 +22,14 @@ const getTop = () => {
  * @returns
  */
 const getTips = () => {
-  return axios.get('/public/tips ')
+  return axios.get('/public/tips')
 }
 /**
  *友情链接
  * @returns
  */
 const getLinks = () => {
-  return axios.get('/public/links ')
+  return axios.get('/public/links')
 }
 
 export { getList, getTips, getLinks, getTop }

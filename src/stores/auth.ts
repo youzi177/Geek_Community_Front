@@ -15,6 +15,10 @@ export const useAuthStore = defineStore('auth', {
     setSid(value: string) {
       this.sid = value
     },
+    //登录状态
+    setisLogin(value: boolean) {
+      this.isLogin = value
+    },
   },
 
   getters: {},
