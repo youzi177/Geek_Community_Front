@@ -12,14 +12,22 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { onMounted, ref } from 'vue'
+import { getTips } from '@/api/content'
+import type { HttpResponse } from '@/common/interface'
 
-const lists = reactive([
-  { title: '百度', link: 'https://www.baidu.com' },
-  { title: '百度', link: 'https://www.baidu.com' },
-  { title: '百度', link: 'https://www.baidu.com' },
-  { title: '百度', link: 'https://www.baidu.com' },
-])
+interface TipItem {
+  title: string
+  link: string
+}
+const lists = ref<TipItem[]>([])
+onMounted(async () => {
+  const result = await getTips()
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    lists.value = data
+  }
+})
 </script>
 
 <style lang="scss" scoped>

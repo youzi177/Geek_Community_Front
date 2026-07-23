@@ -14,7 +14,7 @@ const getList = (options: getListInfo) => {
  * @returns
  */
 const getTop = () => {
-  return axios.get('/public/topWeek ')
+  return axios.get('/public/topWeek')
 }
 
 /**
@@ -29,7 +29,7 @@ const getTips = () => {
  * @returns
  */
 const getLinks = () => {
-  return axios.get('/public/tips ')
+  return axios.get('/public/links ')
 }
 
 export { getList, getTips, getLinks, getTop }
