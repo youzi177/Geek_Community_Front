@@ -30,7 +30,7 @@
           </template>
           <template v-else>
             <!-- 登入后的状态 -->
-            <li class="layui-nav-item">
+            <li class="layui-nav-item" @mousemove="show" @mouseleave="hide">
               <a class="fly-nav-avatar" href="javascript:;">
                 <cite class="layui-hide-xs">{{ userInfo.name }}</cite>
                 <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>
@@ -39,7 +39,11 @@
                 >
                 <img :src="userInfo.pic" />
               </a>
-              <dl class="layui-nav-child">
+              <!-- layui动画：layui-anim layui-anim-up -->
+              <dl
+                class="layui-nav-child layui-anim layui-anim-up"
+                :class="{ 'layui-show': ishover }"
+              >
                 <dd>
                   <a href="user/set.html"><i class="layui-icon">&#xe620;</i>基本设置</a>
                 </dd>
@@ -67,11 +71,12 @@
 
 <script lang="ts" setup>
 import { useAuthStore, useUserStore } from '@/stores'
-import { computed } from 'vue'
-
+import { computed, ref } from 'vue'
+//是否登录
 const isShow = computed(() => {
   return useAuthStore().isLogin
 })
+//用户信息
 const userInfo = computed(() => {
   return (
     useUserStore().userInfo || {
@@ -81,6 +86,27 @@ const userInfo = computed(() => {
     }
   )
 })
+const ishover = ref(false)
+const hoverCtrl = ref<ReturnType<typeof setTimeout> | null>(null)
+//鼠标移入的时候显示
+const show = () => {
+  //清除定时器
+  if (hoverCtrl.value) {
+    clearTimeout(hoverCtrl.value)
+  }
+  hoverCtrl.value = setTimeout(() => {}, 200)
+  ishover.value = true
+}
+//鼠标移出的时候隐藏
+const hide = () => {
+  //清除定时器
+  if (hoverCtrl.value) {
+    clearTimeout(hoverCtrl.value)
+  }
+  hoverCtrl.value = setTimeout(() => {
+    ishover.value = false
+  }, 500)
+}
 </script>
 
 <style></style>
