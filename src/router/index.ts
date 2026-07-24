@@ -6,7 +6,7 @@ const reg = () => import('@/pages/reg.vue')
 const forget = () => import('@/pages/forget.vue')
 const Index = () => import('@/pages/channels/Index.vue')
 const Template1 = () => import('@/pages/channels/Template1.vue')
-
+const Center = () => import('@/pages/Center.vue')
 // import HomeView from '@/pages/home.vue'
 // import login from '@/pages/login.vue'
 // import reg from '@/pages/reg.vue'
@@ -48,6 +48,12 @@ const router = createRouter({
       path: '/forget',
       name: 'forget',
       component: forget,
+    },
+    //个人中心
+    {
+      path: '/center',
+      name: 'center',
+      component: Center,
     },
   ],
 })
