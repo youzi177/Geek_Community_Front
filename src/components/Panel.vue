@@ -3,7 +3,7 @@
     <div class="layui-container">
       <ul class="layui-clear">
         <li class="layui-hide-xs" :class="{ 'layui-this': $route.path === '/' }">
-          <RouterLink :to="{ path: '/' }">首页</RouterLink>
+          <RouterLink :to="{ name: 'index' }">首页</RouterLink>
         </li>
         <li
           v-for="(item, index) in lists"

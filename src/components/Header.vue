@@ -23,9 +23,9 @@
             <li class="layui-nav-item">
               <a class="iconfont icon-touxiang layui-hide-xs" href="../user/login.html"></a>
             </li>
-            <li class="layui-nav-item"><RouterLink :to="{ path: '/login' }">登录</RouterLink></li>
+            <li class="layui-nav-item"><RouterLink :to="{ name: 'login' }">登录</RouterLink></li>
             <li class="layui-nav-item">
-              <RouterLink :to="{ path: '/reg' }">注册</RouterLink>
+              <RouterLink :to="{ name: 'reg' }">注册</RouterLink>
             </li>
           </template>
           <template v-else>

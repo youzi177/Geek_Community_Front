@@ -4,7 +4,7 @@
       <div class="layui-tab layui-tab-brief" lay-filter="user">
         <ul class="layui-tab-title">
           <li class="layui-this">登录</li>
-          <li><RouterLink :to="{ path: '/reg' }">注册</RouterLink></li>
+          <li><RouterLink :to="{ name: 'reg' }">注册</RouterLink></li>
         </ul>
         <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0">
           <div class="layui-tab-item layui-show">
@@ -69,7 +69,7 @@
                 <div class="layui-form-item">
                   <button class="layui-btn" type="submit">立即登录</button>
                   <span style="padding-left: 20px">
-                    <RouterLink :to="{ path: '/forget' }">忘记密码？</RouterLink>
+                    <RouterLink :to="{ name: 'forget' }">忘记密码？</RouterLink>
                   </span>
                 </div>
               </Form>
