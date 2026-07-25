@@ -7,6 +7,12 @@ const forget = () => import('@/pages/forget.vue')
 const Index = () => import('@/pages/channels/Index.vue')
 const Template1 = () => import('@/pages/channels/Template1.vue')
 const Center = () => import('@/pages/Center.vue')
+const UserCenter = () => import('@/components/user/Center.vue')
+const UserMsg = () => import('@/components/user/Msg.vue')
+const UserOthers = () => import('@/components/user/Others.vue')
+const UserPosts = () => import('@/components/user/Posts.vue')
+const UserSet = () => import('@/components/user/Settings.vue')
+const User = () => import('@/pages/User.vue')
 // import HomeView from '@/pages/home.vue'
 // import login from '@/pages/login.vue'
 // import reg from '@/pages/reg.vue'
@@ -16,14 +22,14 @@ const Center = () => import('@/pages/Center.vue')
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   //linkActiveClass: 'layui-this',
-
+  linkExactActiveClass: 'layui-this', // 选中颜色
   routes: [
     {
       path: '/',
       component: HomeView,
       children: [
         {
-          path: '/',
+          path: '',
           name: 'index',
           component: Index,
         },
@@ -49,11 +55,45 @@ const router = createRouter({
       name: 'forget',
       component: forget,
     },
+    // 个人主页
+    {
+      path: '/user',
+      name: 'user',
+      component: User,
+    },
     //个人中心
     {
       path: '/center',
-      name: 'center',
+      //name: 'center',
       component: Center,
+
+      children: [
+        {
+          path: '',
+          name: 'center',
+          component: UserCenter,
+        },
+        {
+          path: 'set',
+          name: 'set',
+          component: UserSet,
+        },
+        {
+          path: 'msg',
+          name: 'msg',
+          component: UserMsg,
+        },
+        {
+          path: 'others',
+          name: 'others',
+          component: UserOthers,
+        },
+        {
+          path: 'posts',
+          name: 'posts',
+          component: UserPosts,
+        },
+      ],
     },
   ],
 })
