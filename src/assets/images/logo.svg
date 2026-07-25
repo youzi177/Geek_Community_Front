@@ -1,0 +1,77 @@
+<svg width="150" height="37" viewBox="0 0 150 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+
+    <linearGradient id="featherGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7ED39A"/>
+      <stop offset="100%" stop-color="#5FB878"/>
+    </linearGradient>
+
+    <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#5FB878" stop-opacity="0.35"/>
+    </linearGradient>
+
+  </defs>
+
+
+  <!-- Feather -->
+  <g transform="translate(0,3) scale(1)">
+
+    <path
+      d="M14 28
+         C18 19 24 10 32 3
+         C25 3 16 6 10 12
+         C4 18 3 25 3 29
+         C7 28 10 27 14 24"
+      fill="url(#featherGradient)"
+    />
+
+    <path
+      d="M5 30 C13 21 20 14 29 8"
+      stroke="url(#lineGradient)"
+      stroke-width="1.5"
+      stroke-linecap="round"
+    />
+
+  </g>
+
+
+  <!-- English -->
+  <text
+    x="40"
+    y="25"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="18"
+    font-weight="700"
+    fill="#5FB878">
+    Fluff
+  </text>
+
+
+  <!-- Divider -->
+  <rect
+    x="82"
+    y="8"
+    width="1"
+    height="21"
+    rx="0.5"
+    fill="#5FB878"
+    fill-opacity="0.55"
+  />
+
+
+  <!-- Chinese -->
+  <text
+    x="89"
+    y="25"
+    font-family="Noto Sans SC, Microsoft YaHei, sans-serif"
+    font-size="15"
+    font-weight="600"
+    letter-spacing="-0.5"
+    fill="#5FB878">
+    轻羽社区
+  </text>
+
+
+</svg>
