@@ -17,6 +17,8 @@ const MyInfo = () => import('@/components/user/common/MyInfo.vue')
 const PicUpload = () => import('@/components/user/common/PicUpload.vue')
 const Password = () => import('@/components/user/common/Password.vue')
 const Accounts = () => import('@/components/user/common/Accounts.vue')
+const MyPost = () => import('@/components/user/common/MyPost.vue')
+const MyCollection = () => import('@/components/user/common/MyCollection.vue')
 // import HomeView from '@/pages/home.vue'
 // import login from '@/pages/login.vue'
 // import reg from '@/pages/reg.vue'
@@ -77,6 +79,7 @@ const router = createRouter({
           name: 'center',
           component: UserCenter,
         },
+        // 基本设置
         {
           path: 'set',
           name: 'set',
@@ -122,6 +125,18 @@ const router = createRouter({
           path: 'posts',
           name: 'posts',
           component: UserPosts,
+          children: [
+            {
+              path: 'mypost',
+              name: 'mypost',
+              component: MyPost,
+            },
+            {
+              path: 'mycollection',
+              name: 'mycollection',
+              component: MyCollection,
+            },
+          ],
         },
       ],
     },

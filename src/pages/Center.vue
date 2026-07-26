@@ -45,8 +45,8 @@ const lists = ref([
   {
     name: '我的帖子',
     icon: 'layui-icon-form',
-    link: 'posts',
-    match: ['posts'],
+    link: 'mypost',
+    match: ['mypost', 'mycollection'],
   },
   {
     name: '我的消息',

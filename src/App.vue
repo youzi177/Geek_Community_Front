@@ -11,7 +11,7 @@ import '@/assets/layui/css/layui.css'
 import '@/assets/css/global.css'
 </script>
 
-<style>
+<style lang="scss">
 .svg svg {
   position: relative;
   top: -12px;
@@ -19,5 +19,21 @@ import '@/assets/css/global.css'
 }
 .gray {
   color: #999;
+}
+//用户中心-我的贴子基础样式
+.pl0 {
+  padding-left: 0;
+}
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+.pr0 {
+  padding-right: 0;
 }
 </style>
