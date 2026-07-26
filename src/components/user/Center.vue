@@ -6,9 +6,9 @@
       <div class="layui-col-md6">
         <div class="panel border">
           <div class="title">我的会员信息</div>
-          <div class="content">
-            <p>积分经验值：60</p>
-            <p>您当前为:非VIP</p>
+          <div class="content fly-signin">
+            <p>积分经验值：<cite>60 </cite></p>
+            <p>您当前为:<cite>非VIP</cite></p>
           </div>
         </div>
       </div>
@@ -21,77 +21,11 @@
           <div class="title">快捷方式</div>
           <div class="content">
             <ul class="layui-row layui-col-space10">
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
-              </li>
-              <li class="layui-col-sm3 layui-col-xs4">
-                <a href="">
-                  <div class="layui-icon layui-icon-set shortcut"></div>
-                  <span>修改密码</span>
-                </a>
+              <li class="layui-col-sm3 layui-col-xs4" v-for="(item, index) in lists" :key="index">
+                <RouterLink :to="{ name: item.link }">
+                  <div class="layui-icon shortcut" :class="item.icon"></div>
+                  <span>{{ item.name }}</span>
+                </RouterLink>
               </li>
             </ul>
           </div>
@@ -102,7 +36,70 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import Sign from '../sidebar/Sign.vue'
+const lists = ref([
+  {
+    name: '修改信息',
+    icon: 'layui-icon-set',
+    link: 'info',
+  },
+  {
+    name: '修改头像',
+    icon: 'layui-icon-face-smile',
+    link: 'pic',
+  },
+  {
+    name: '修改密码',
+    icon: 'layui-icon-password',
+    link: 'password',
+  },
+  {
+    name: '账号绑定',
+    icon: 'layui-icon-app',
+    link: 'accounts',
+  },
+  {
+    name: '发表新帖',
+    icon: 'layui-icon-add-circle',
+    link: '',
+  },
+  {
+    name: '查看分享',
+    icon: 'layui-icon-share',
+    link: '',
+  },
+  {
+    name: '我的贴子',
+    icon: 'layui-icon-username',
+    link: 'mypost',
+  },
+  {
+    name: '我的收藏',
+    icon: 'layui-icon-rate-solid',
+    link: 'mycollection',
+  },
+  {
+    name: '其他资料',
+    icon: 'layui-icon-template-1',
+    link: '',
+  },
+  {
+    name: '关注公众号',
+    icon: 'layui-icon-login-wechat',
+    link: '',
+  },
+  {
+    name: '文档',
+    icon: 'layui-icon-read',
+    link: '',
+  },
+  {
+    name: '后台管理',
+    icon: 'layui-icon-user',
+    link: '',
+  },
+])
 </script>
 
 <style lang="scss" scoped>
