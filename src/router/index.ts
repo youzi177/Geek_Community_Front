@@ -121,6 +121,7 @@ const router = createRouter({
           name: 'others',
           component: UserOthers,
         },
+        // 我的贴子
         {
           path: 'posts',
           name: 'posts',
