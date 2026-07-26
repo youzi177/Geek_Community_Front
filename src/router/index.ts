@@ -13,6 +13,10 @@ const UserOthers = () => import('@/components/user/Others.vue')
 const UserPosts = () => import('@/components/user/Posts.vue')
 const UserSet = () => import('@/components/user/Settings.vue')
 const User = () => import('@/pages/User.vue')
+const MyInfo = () => import('@/components/user/common/MyInfo.vue')
+const PicUpload = () => import('@/components/user/common/PicUpload.vue')
+const Password = () => import('@/components/user/common/Password.vue')
+const Accounts = () => import('@/components/user/common/Accounts.vue')
 // import HomeView from '@/pages/home.vue'
 // import login from '@/pages/login.vue'
 // import reg from '@/pages/reg.vue'
@@ -77,6 +81,32 @@ const router = createRouter({
           path: 'set',
           name: 'set',
           component: UserSet,
+          // redirect: {
+          //   name: 'info',
+          // },
+          children: [
+            {
+              path: 'info',
+              name: 'info',
+              component: MyInfo,
+            },
+            //子路由不要以 / 开头，否则它会被当成根路径路由，不会拼接父级路径。
+            {
+              path: 'pic',
+              name: 'pic',
+              component: PicUpload,
+            },
+            {
+              path: 'password',
+              name: 'password',
+              component: Password,
+            },
+            {
+              path: 'accounts',
+              name: 'accounts',
+              component: Accounts,
+            },
+          ],
         },
         {
           path: 'msg',
