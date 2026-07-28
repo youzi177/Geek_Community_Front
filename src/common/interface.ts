@@ -33,5 +33,6 @@ export interface HttpResponse {
   //data不知道返回的什么数据
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any
+  token?: string
   msg?: string
 }

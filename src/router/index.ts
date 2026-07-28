@@ -1,3 +1,4 @@
+import { useAuthStore, useUserStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const HomeView = () => import('@/pages/home.vue')
@@ -30,6 +31,7 @@ const router = createRouter({
   //linkActiveClass: 'layui-this',
   linkExactActiveClass: 'layui-this', // 选中颜色
   routes: [
+    // 首页
     {
       path: '/',
       component: HomeView,
@@ -72,7 +74,28 @@ const router = createRouter({
       path: '/center',
       //name: 'center',
       component: Center,
-
+      //center路由守卫
+      beforeEnter: () => {
+        const auth = useAuthStore()
+        // 未登录
+        if (!auth.isLogin) {
+          //看本地有没有token和userInfoStr
+          const token = localStorage.getItem('token')
+          const userInfoStr = localStorage.getItem('userInfo')
+          const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null
+          if (token !== '' && token !== null) {
+            useAuthStore().setToken(token)
+            useUserStore().setUserInfo(userInfo)
+            useAuthStore().setisLogin(true)
+            return true
+          }
+          return {
+            name: 'login',
+          }
+        }
+        //登录
+        return true
+      },
       children: [
         {
           path: '',
@@ -143,5 +166,20 @@ const router = createRouter({
     },
   ],
 })
+//全局路由守卫 vuerouter5不推荐使用next
+// router.beforeEach((to, from) => {
+//   console.log('🚀 ~ to:', to)
+//   console.log('🚀 ~ from:', from)
+//   const isLogin = useAuthStore().isLogin
+//   console.log('🚀 ~ isLogin:', isLogin)
+//   if (isLogin) {
+//     //登录状态
+//     return true
+//   } else {
+//     return {
+//       name: 'login',
+//     }
+//   }
+// })
 
 export default router

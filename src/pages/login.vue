@@ -105,13 +105,14 @@ const submit = async (value: any, actions: any) => {
     sid: useAuthStore().sid,
   })
   //明确告知result就是HttpResponse类型
-  const { code, msg, data } = result as HttpResponse
+  const { code, msg, data, token } = result as HttpResponse
   if (code === 200) {
     state.username = ''
     state.password = ''
     state.code = ''
     useUserStore().setUserInfo(data)
     useAuthStore().setisLogin(true)
+    useAuthStore().setToken(token as string)
     router.push({ name: 'index' })
   } else if (code === 401) {
     setErrors({
