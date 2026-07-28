@@ -14,9 +14,14 @@ export const useUserStore = defineStore('user', {
   getters: {},
   actions: {
     //设置用户基本信息
-    setUserInfo(value: UserInfo) {
+    setUserInfo(value: UserInfo | null) {
       this.userInfo = value
-      localStorage.setItem('userInfo', JSON.stringify(value)) //localStorage存用户信息
+      if (value) {
+        localStorage.setItem('userInfo', JSON.stringify(value)) //localStorage存用户信息
+      } else {
+        //退出之后value是空，这里删除token
+        localStorage.removeItem('userInfo')
+      }
     },
   },
 })

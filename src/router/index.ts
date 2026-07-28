@@ -74,32 +74,34 @@ const router = createRouter({
       path: '/center',
       //name: 'center',
       component: Center,
+      meta: { requiresAuth: true }, //路由元信息
       //center路由守卫
-      beforeEnter: () => {
-        const auth = useAuthStore()
-        // 未登录
-        if (!auth.isLogin) {
-          //看本地有没有token和userInfoStr
-          const token = localStorage.getItem('token')
-          const userInfoStr = localStorage.getItem('userInfo')
-          const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null
-          if (token !== '' && token !== null) {
-            useAuthStore().setToken(token)
-            useUserStore().setUserInfo(userInfo)
-            useAuthStore().setisLogin(true)
-            return true
-          }
-          return {
-            name: 'login',
-          }
-        }
-        //登录
-        return true
-      },
+      // beforeEnter: () => {
+      //   const auth = useAuthStore()
+      //   // 未登录
+      //   if (!auth.isLogin) {
+      //     //看本地有没有token和userInfoStr
+      //     const token = localStorage.getItem('token')
+      //     const userInfoStr = localStorage.getItem('userInfo')
+      //     const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null
+      //     if (token !== '' && token !== null) {
+      //       useAuthStore().setToken(token)
+      //       useUserStore().setUserInfo(userInfo)
+      //       useAuthStore().setisLogin(true)
+      //       return true
+      //     }
+      //     return {
+      //       name: 'login',
+      //     }
+      //   }
+      //   //登录
+      //   return true
+      // },
       children: [
         {
           path: '',
           name: 'center',
+
           component: UserCenter,
         },
         // 基本设置
@@ -167,19 +169,37 @@ const router = createRouter({
   ],
 })
 //全局路由守卫 vuerouter5不推荐使用next
-// router.beforeEach((to, from) => {
-//   console.log('🚀 ~ to:', to)
-//   console.log('🚀 ~ from:', from)
-//   const isLogin = useAuthStore().isLogin
-//   console.log('🚀 ~ isLogin:', isLogin)
-//   if (isLogin) {
-//     //登录状态
-//     return true
-//   } else {
-//     return {
-//       name: 'login',
-//     }
-//   }
-// })
+router.beforeEach((to) => {
+  //第一种解决方式：
+  // if (to.name === 'login') {
+  //   return true
+  // }
+  //看本地有没有token和userInfoStr
+  const token = localStorage.getItem('token')
+  const userInfoStr = localStorage.getItem('userInfo')
+  const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null
+  if (token !== '' && token !== null) {
+    useAuthStore().setToken(token)
+    useUserStore().setUserInfo(userInfo)
+    useAuthStore().setisLogin(true)
+    return true
+  }
+  //第二种：
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    //需要登录的页面
+    const auth = useAuthStore()
+    // 未登录
+    if (!auth.isLogin) {
+      return {
+        name: 'login',
+      }
+    }
+    //登录
+    //登录后可以权限判断，对用户的身份判断，如管理员可以删贴等
+    return true
+  } else {
+    return true
+  }
+})
 
 export default router

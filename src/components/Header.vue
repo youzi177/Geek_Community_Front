@@ -45,21 +45,32 @@
                 :class="{ 'layui-show': ishover }"
               >
                 <dd>
-                  <a href="user/set.html"><i class="layui-icon">&#xe620;</i>基本设置</a>
-                </dd>
-                <dd>
-                  <a href="user/message.html"
-                    ><i class="iconfont icon-tongzhi" style="top: 4px"></i>我的消息</a
+                  <router-link :to="{ name: 'info' }"
+                    ><i class="layui-icon layui-icon-set"></i>基本设置</router-link
                   >
                 </dd>
                 <dd>
-                  <a href="user/home.html"
-                    ><i class="layui-icon" style="margin-left: 2px; font-size: 22px">&#xe68e;</i
-                    >我的主页</a
+                  <router-link :to="{ name: 'msg' }"
+                    ><i class="iconfont icon-tongzhi" style="top: 4px"></i>我的消息</router-link
+                  >
+                  <!-- <a href="user/message.html"
+                    ><i class="iconfont icon-tongzhi" style="top: 4px"></i>我的消息</a
+                  > -->
+                </dd>
+                <dd>
+                  <router-link :to="{ name: 'user' }"
+                    ><i class="layui-icon layui-icon-home"></i>我的主页</router-link
+                  >
+                </dd>
+                <dd>
+                  <router-link :to="{ name: 'center' }"
+                    ><i class="layui-icon layui-icon-username"></i>用户中心</router-link
                   >
                 </dd>
                 <hr style="margin: 5px 0" />
-                <dd><a href="/user/logout/" style="text-align: center">退出</a></dd>
+                <dd>
+                  <a href="javascript:void(0)" style="text-align: center" @click="logout"> 退出</a>
+                </dd>
               </dl>
             </li>
           </template>
@@ -72,6 +83,8 @@
 <script lang="ts" setup>
 import { useAuthStore, useUserStore } from '@/stores'
 import { computed, ref } from 'vue'
+import { myconfirm } from './modules/alert'
+import router from '@/router'
 //是否登录
 const isShow = computed(() => {
   return useAuthStore().isLogin
@@ -106,6 +119,22 @@ const hide = () => {
   hoverCtrl.value = setTimeout(() => {
     ishover.value = false
   }, 500)
+}
+//退出功能
+const logout = () => {
+  myconfirm(
+    '确定退出吗',
+    () => {
+      //清除状态
+      localStorage.clear()
+      useUserStore().setUserInfo(null)
+      useAuthStore().setisLogin(false)
+      useAuthStore().setToken('')
+      //跳转到登录
+      router.push({ name: 'index' })
+    },
+    () => {},
+  )
 }
 </script>
 

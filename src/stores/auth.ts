@@ -18,12 +18,24 @@ export const useAuthStore = defineStore('auth', {
     //登录状态
     setisLogin(value: boolean) {
       this.isLogin = value
-      localStorage.setItem('isLogin', JSON.stringify(value)) //localStorage存用户登录状态
+      if (value) {
+        localStorage.setItem('isLogin', JSON.stringify(value)) //localStorage存用户登录状态
+      } else {
+        //退出之后value是空，这里删除token
+        localStorage.removeItem('isLogin')
+      }
     },
     //存放token
     setToken(value: string) {
       this.token = value
-      localStorage.setItem('token', JSON.stringify(value)) //localStorage存用户token
+      if (value) {
+        localStorage.setItem('token', value) //localStorage存用户token
+      } else {
+        //退出之后value是空，这里删除token
+        localStorage.removeItem('token')
+      }
+
+      this.token = value
     },
   },
 
