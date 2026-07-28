@@ -20,6 +20,8 @@ const Password = () => import('@/components/user/common/Password.vue')
 const Accounts = () => import('@/components/user/common/Accounts.vue')
 const MyPost = () => import('@/components/user/common/MyPost.vue')
 const MyCollection = () => import('@/components/user/common/MyCollection.vue')
+import { jwtDecode } from 'jwt-decode'
+import moment from 'dayjs'
 // import HomeView from '@/pages/home.vue'
 // import login from '@/pages/login.vue'
 // import reg from '@/pages/reg.vue'
@@ -179,12 +181,19 @@ router.beforeEach((to) => {
   const userInfoStr = localStorage.getItem('userInfo')
   const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null
   if (token !== '' && token !== null) {
-    useAuthStore().setToken(token)
-    useUserStore().setUserInfo(userInfo)
-    useAuthStore().setisLogin(true)
-    return true
+    const payload = jwtDecode<{ exp: number }>(token)
+    //如果没过期
+    if (moment().isBefore(moment(payload.exp * 1000))) {
+      useAuthStore().setToken(token)
+      useUserStore().setUserInfo(userInfo)
+      useAuthStore().setisLogin(true)
+      return true
+    } else {
+      localStorage.clear()
+    }
   }
   //第二种：
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     //需要登录的页面
     const auth = useAuthStore()
