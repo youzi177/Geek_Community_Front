@@ -138,4 +138,8 @@ const logout = () => {
 }
 </script>
 
-<style></style>
+<style scoped>
+.fly-logo {
+  left: -20px;
+}
+</style>

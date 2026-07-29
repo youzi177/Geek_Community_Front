@@ -3,7 +3,7 @@
     <div class="fly-panel-title">
       签到
       <i class="fly-mid"></i>
-      <a href="javascript:;" class="fly-link" id="LAY_signinHelp">说明</a>
+      <a href="javascript:;" class="fly-link" id="LAY_signinHelp" @click="showInfo">说明</a>
       <i class="fly-mid"></i>
       <a href="javascript:;" class="fly-link" id="LAY_signinTop"
         >活跃榜<span class="layui-badge-dot"></span
@@ -20,9 +20,122 @@
           <span>获得了<cite>20</cite>飞吻</span>
           -->
     </div>
+    <!-- 签到组件弹出框 -->
+    <div class="modal" v-show="isShow">
+      <div class="mask" @click="close"></div>
+      <div class="layui-layer layui-layer-page" :class="{ active: isShow }">
+        <div class="layui-layer-title">
+          签到说明<i class="layui-icon layui-icon-close pull-right" @click="close"></i>
+        </div>
+        <div class="layui-layer-content">
+          <div class="layui-text">
+            <blockquote class="layui-elem-quote">"签到"可获得的社区积分，规则如下</blockquote>
+            <table class="layui-table">
+              <thead>
+                <tr>
+                  <th>连续签到天数</th>
+                  <th>每天可获得积分</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>&lt;5</td>
+                  <td>5</td>
+                </tr>
+                <tr>
+                  <td>&ge;5</td>
+                  <td>10</td>
+                </tr>
+                <tr>
+                  <td>&ge;15</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>&ge;30</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>&ge;100</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>&ge;365</td>
+                  <td>50</td>
+                </tr>
+              </tbody>
+            </table>
+            <div>
+              <p>中间若有间隔，则连续天数重新计算</p>
+              <p class="orange">不可以使用程序自动签到，否则积分清零</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { ref } from 'vue'
 
-<style></style>
+const isShow = ref(false)
+//显示签到说明
+const showInfo = () => {
+  isShow.value = true
+}
+const close = () => {
+  isShow.value = false
+}
+</script>
+
+<style lang="scss" scoped>
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.mask {
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 20000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.layui-layer {
+  position: fixed;
+  width: 300px;
+  height: 480px;
+  top: 50%;
+  left: 50%;
+  margin-top: -240px;
+  margin-left: -150px;
+  background: #fff;
+  z-index: 21000;
+  &.active {
+    animation-fill-mode: both;
+    animation-duration: 0.2s;
+    animation-name: bounceIn;
+  }
+  .layui-layer-title {
+    height: 42px;
+    line-height: 42px;
+    padding: 0 20px;
+    color: #333;
+    background-color: #f8f8f8;
+  }
+  .layui-layer-content {
+    padding: 20px;
+  }
+}
+//解决新版layui 间隔问题
+.layui-text p {
+  margin: 0;
+}
+</style>

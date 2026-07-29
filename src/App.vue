@@ -60,4 +60,11 @@ import '@/assets/css/global.css'
 .pr0 {
   padding-right: 0;
 }
+//签到组件
+.orange {
+  color: #ff5722;
+}
+.pull-right {
+  float: right !important;
+}
 </style>
