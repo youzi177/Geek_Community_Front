@@ -5,7 +5,7 @@
       <i class="fly-mid"></i>
       <a href="javascript:;" class="fly-link" id="LAY_signinHelp" @click="showInfo">说明</a>
       <i class="fly-mid"></i>
-      <a href="javascript:;" class="fly-link" id="LAY_signinTop"
+      <a href="javascript:;" class="fly-link" @click="showTop"
         >活跃榜<span class="layui-badge-dot"></span
       ></a>
       <span class="fly-signin-days">已连续签到<cite>16</cite>天</span>
@@ -20,75 +20,52 @@
           <span>获得了<cite>20</cite>飞吻</span>
           -->
     </div>
-    <!-- 签到组件弹出框 -->
-    <div class="modal" v-show="isShow">
-      <div class="mask" @click="close"></div>
-      <div class="layui-layer layui-layer-page" :class="{ active: isShow }">
-        <div class="layui-layer-title">
-          签到说明<i class="layui-icon layui-icon-close pull-right" @click="close"></i>
-        </div>
-        <div class="layui-layer-content">
-          <div class="layui-text">
-            <blockquote class="layui-elem-quote">"签到"可获得的社区积分，规则如下</blockquote>
-            <table class="layui-table">
-              <thead>
-                <tr>
-                  <th>连续签到天数</th>
-                  <th>每天可获得积分</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>&lt;5</td>
-                  <td>5</td>
-                </tr>
-                <tr>
-                  <td>&ge;5</td>
-                  <td>10</td>
-                </tr>
-                <tr>
-                  <td>&ge;15</td>
-                  <td>15</td>
-                </tr>
-                <tr>
-                  <td>&ge;30</td>
-                  <td>15</td>
-                </tr>
-                <tr>
-                  <td>&ge;100</td>
-                  <td>30</td>
-                </tr>
-                <tr>
-                  <td>&ge;365</td>
-                  <td>50</td>
-                </tr>
-              </tbody>
-            </table>
-            <div>
-              <p>中间若有间隔，则连续天数重新计算</p>
-              <p class="orange">不可以使用程序自动签到，否则积分清零</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <SignInfo @closeModal="close" :is-show="isShow"></SignInfo>
+    <SignList @closeModal="close" :is-show="showList" :lists="lists"></SignList>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import SignInfo from './SignInfo.vue'
+import SignList from './SignList.vue'
 
-const isShow = ref(false)
-//显示签到说明
+const isShow = ref(false) //签到说明的显示与否
+const showList = ref(false) //签到榜单的显示与否
+//父组件不应该发送请求，因为没必要页面加载就去请求签到榜单，而是等点击到签到榜单才去请求接口合理
+const lists = ref([
+  {
+    name: 'test1',
+    count: 4,
+    created: '2026-07-29',
+  },
+  {
+    name: 'test1',
+    count: 4,
+    created: '2026-07-29',
+  },
+  {
+    name: 'test1',
+    count: 4,
+    created: '2026-07-29',
+  },
+]) //签到榜单的数据
+//签到说明的显示与否
 const showInfo = () => {
   isShow.value = true
 }
+//
+const showTop = () => {
+  showList.value = true
+}
+//签到榜单的显示与否
 const close = () => {
   isShow.value = false
+  showList.value = false
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @keyframes bounceIn {
   0% {
     opacity: 0;
@@ -132,6 +109,23 @@ const close = () => {
   }
   .layui-layer-content {
     padding: 20px;
+  }
+}
+.layui-tab-content {
+  padding: 0 10px;
+}
+.layui-tab-item {
+  line-height: 45px;
+  li {
+    border-bottom: 1px dotted #dcdcdc;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 2px;
   }
 }
 //解决新版layui 间隔问题
