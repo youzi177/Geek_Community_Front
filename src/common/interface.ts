@@ -35,4 +35,6 @@ export interface HttpResponse {
   data?: any
   token?: string
   msg?: string
+  favs?: number
+  count?: number
 }

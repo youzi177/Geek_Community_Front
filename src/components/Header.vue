@@ -127,10 +127,10 @@ const logout = () => {
     () => {
       //清除状态
       localStorage.clear()
-      useUserStore().setUserInfo(null)
+      useUserStore().setUserInfo({ name: '', pic: '', isVip: '', count: 0, favs: 0, isSign: false })
       useAuthStore().setisLogin(false)
       useAuthStore().setToken('')
-      //跳转到登录
+      //跳转到首页
       router.push({ name: 'index' })
     },
     () => {},

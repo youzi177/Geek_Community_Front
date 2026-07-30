@@ -28,12 +28,7 @@ export const useAuthStore = defineStore('auth', {
     //存放token
     setToken(value: string) {
       this.token = value
-      if (value) {
-        localStorage.setItem('token', value) //localStorage存用户token
-      } else {
-        //退出之后value是空，这里删除token
-        localStorage.removeItem('token')
-      }
+      localStorage.setItem('token', value) //localStorage存用户token
 
       this.token = value
     },

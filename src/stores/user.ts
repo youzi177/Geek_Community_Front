@@ -3,25 +3,23 @@ interface UserInfo {
   name: string
   pic: string
   isVip: string
+  count: number
+  favs: number
+  isSign: boolean
 }
 export const useUserStore = defineStore('user', {
   state() {
     return {
-      userInfo: null as UserInfo | null,
+      userInfo: {} as UserInfo,
     }
   },
 
   getters: {},
   actions: {
     //设置用户基本信息
-    setUserInfo(value: UserInfo | null) {
+    setUserInfo(value: UserInfo) {
       this.userInfo = value
-      if (value) {
-        localStorage.setItem('userInfo', JSON.stringify(value)) //localStorage存用户信息
-      } else {
-        //退出之后value是空，这里删除token
-        localStorage.removeItem('userInfo')
-      }
+      localStorage.setItem('userInfo', JSON.stringify(value)) //localStorage存用户信息
     },
   },
 })

@@ -10,15 +10,15 @@ const getCode = async (sid: string) => {
   })
 }
 //找回密码
-const forget = async (option: ForgetInfo) => {
-  return await axios.post('/login/forget', { ...option })
+const forget = (option: ForgetInfo) => {
+  return axios.post('/login/forget', { ...option })
 }
 //登录
-const login = async (option: LoginInfo) => {
-  return await axios.post('/login/login', { ...option })
+const login = (option: LoginInfo) => {
+  return axios.post('/login/login', { ...option })
 }
 //注册
-const reg = async (option: RegInfo) => {
-  return await axios.post('/login/reg', { ...option })
+const reg = (option: RegInfo) => {
+  return axios.post('/login/reg', { ...option })
 }
 export { getCode, forget, login, reg }
