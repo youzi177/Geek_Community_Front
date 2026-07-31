@@ -132,6 +132,7 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse
   if (code === 200) {
+    actions.resetForm() //清除错误信息
     alert(msg)
   } else if (code === 500) {
     setErrors({

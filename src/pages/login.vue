@@ -112,6 +112,7 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
     state.username = ''
     state.password = ''
     state.code = ''
+    actions.resetForm() //清除错误信息
     UserStore.setUserInfo(data)
     AuthStore.setisLogin(true)
     AuthStore.setToken(token as string)

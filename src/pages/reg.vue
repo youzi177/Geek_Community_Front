@@ -154,6 +154,7 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse
   if (code === 200) {
+    actions.resetForm() //清除错误信息
     myalert(msg as string)
     router.push({ name: 'login' })
   } else if (code === 401) {
