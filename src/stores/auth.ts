@@ -29,7 +29,6 @@ export const useAuthStore = defineStore('auth', {
     setToken(value: string) {
       this.token = value
       localStorage.setItem('token', value) //localStorage存用户token
-
       this.token = value
     },
   },

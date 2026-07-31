@@ -123,33 +123,33 @@
 
 <script lang="ts" setup>
 import { reg } from '@/api/login'
-
-import { Field, Form } from 'vee-validate'
+import { Field, Form, type SubmissionContext } from 'vee-validate'
 import { onMounted, toRefs } from 'vue'
-
 import Uselogin from '@/hooks/Uselogin'
 import { useAuthStore } from '@/stores'
 import type { HttpResponse } from '@/common/interface'
 import { myalert } from '@/components/modules/alert'
 import router from '@/router'
+
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { name, username, password, repassword, code, svg } = toRefs(state)
-
+//pinia
+const AuthStore = useAuthStore()
 //挂载时执行
 onMounted(() => {
   setid()
   _getCode()
 })
 //注册
-const submit = async (value: any, actions: any) => {
+const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
   const { setErrors } = actions
   const result = await reg({
     username: state.username,
     password: state.password,
     name: state.name,
     code: state.code,
-    sid: useAuthStore().sid,
+    sid: AuthStore.sid,
   })
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse
@@ -157,7 +157,10 @@ const submit = async (value: any, actions: any) => {
     myalert(msg as string)
     router.push({ name: 'login' })
   } else if (code === 401) {
-    setErrors(msg)
+    //这里比较特殊，msg是对象， setErrors(msg)是可以正常的，但是会ts报错
+    //因为msg是string，所以需要unknown中转一下
+    //as Record<string, string> 是我确定返回的就是对象
+    setErrors(msg as unknown as Record<string, string>)
   }
 }
 </script>

@@ -18,16 +18,17 @@
         <template v-if="isLogin">
           <!-- 用户登入后显示 -->
           <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block">
-            <a href="user/index.html">我发表的贴</a>
+            <RouterLink :to="{ name: 'mypost' }">我发表的贴</RouterLink>
           </li>
           <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block">
-            <a href="user/index.html#collection">我收藏的贴</a>
+            <RouterLink :to="{ name: 'mycollection' }">我收藏的贴</RouterLink>
           </li>
         </template>
       </ul>
 
       <div class="fly-column-right layui-hide-xs">
         <span class="fly-search"><i class="layui-icon"></i></span>
+
         <a href="jie/add.html" class="layui-btn">发表新帖</a>
       </div>
       <div
@@ -41,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useAuthStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 const lists = reactive([

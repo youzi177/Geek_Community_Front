@@ -106,11 +106,14 @@
 import { forget } from '@/api/login'
 import type { HttpResponse } from '@/common/interface'
 import { Field, Form } from 'vee-validate'
-import { onMounted, reactive, toRefs } from 'vue'
+import type { SubmissionContext } from 'vee-validate'
+import { onMounted, toRefs } from 'vue'
 import { useAuthStore } from '@/stores'
 import Uselogin from '@/hooks/Uselogin'
 //封装函数
 const { state, _getCode, setid } = Uselogin()
+//pinia
+const AuthStore = useAuthStore()
 
 const { username, code, svg } = toRefs(state)
 onMounted(() => {
@@ -119,12 +122,12 @@ onMounted(() => {
 })
 
 //找回密码
-const submit = async (value: any, actions: any) => {
+const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
   const { setErrors } = actions
   const result = await forget({
     username: state.username,
     code: state.code,
-    sid: useAuthStore().sid,
+    sid: AuthStore.sid,
   })
   //明确告知result就是HttpResponse类型
   const { code, msg } = result as HttpResponse

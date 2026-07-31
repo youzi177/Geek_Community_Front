@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { getCode } from '@/api/login'
 import type { HttpResponse } from '@/common/interface'
 export default () => {
+  //pinia
+  const AuthStore = useAuthStore()
   //数据
   const state = reactive({
     username: '',
@@ -17,24 +19,27 @@ export default () => {
   const setid = () => {
     let sid = ''
     //从localStorage取值sid
-    if (localStorage.getItem('sid')) {
-      sid = localStorage.getItem('sid') || ''
-      //存到pinia
+    //sidValue保存起来，然后判断是不是空的
+    const sidValue = localStorage.getItem('sid')
+    if (sidValue !== null) {
+      //不是空的存到变量sid
+      sid = sidValue
     } else {
-      //没有sid就生成一个并存入localStorage
+      //没有sid就生成一个存到变量sid
+      // 并存入localStorage
       sid = uuidv4()
       localStorage.setItem('sid', sid)
-      //存到pinia
     }
-    useAuthStore().setSid(sid)
+    //存到pinia
+    AuthStore.setSid(sid)
   }
   //发送验证码
   const _getCode = async () => {
-    const sid = useAuthStore().sid
+    const sid = AuthStore.sid
     //请求验证码
     const result = (await getCode(sid)) as HttpResponse
     //解构
-    const { code, data } = result
+    const { code, data } = result as HttpResponse
     if (code === 200) {
       state.svg = data as string
     }

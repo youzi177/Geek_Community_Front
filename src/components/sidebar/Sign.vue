@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import SignInfo from './SignInfo.vue'
 import SignList from './SignList.vue'
 import { useUserStore, useAuthStore } from '@/stores/index.ts'
@@ -76,7 +76,7 @@ const lists = ref([
 const count = computed(() => userStore.userInfo?.count ?? 0)
 //签到积分
 const favs = computed(() => {
-  let day = count.value
+  const day = count.value
   let result = 0
   if (day < 5) {
     result = 5

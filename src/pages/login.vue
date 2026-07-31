@@ -82,27 +82,29 @@
 </template>
 
 <script lang="ts" setup>
-import { Field, Form } from 'vee-validate'
+import { Field, Form, type SubmissionContext } from 'vee-validate'
 import { onMounted, toRefs } from 'vue'
 import Uselogin from '@/hooks/Uselogin'
 import { login } from '@/api/login'
 import { useAuthStore, useUserStore } from '@/stores'
 import type { HttpResponse } from '@/common/interface'
-import { myalert, myconfirm } from '@/components/modules/alert'
+import { myalert } from '@/components/modules/alert'
 import router from '@/router'
 
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { username, password, code, svg } = toRefs(state)
-
+//pinia
+const AuthStore = useAuthStore()
+const UserStore = useUserStore()
 //登录
-const submit = async (value: any, actions: any) => {
+const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
   const { setErrors } = actions
   const result = await login({
     username: state.username,
     password: state.password,
     code: state.code,
-    sid: useAuthStore().sid,
+    sid: AuthStore.sid,
   })
   //明确告知result就是HttpResponse类型
   const { code, msg, data, token } = result as HttpResponse
@@ -110,9 +112,9 @@ const submit = async (value: any, actions: any) => {
     state.username = ''
     state.password = ''
     state.code = ''
-    useUserStore().setUserInfo(data)
-    useAuthStore().setisLogin(true)
-    useAuthStore().setToken(token as string)
+    UserStore.setUserInfo(data)
+    AuthStore.setisLogin(true)
+    AuthStore.setToken(token as string)
     router.push({ name: 'index' })
   } else if (code === 401) {
     setErrors({

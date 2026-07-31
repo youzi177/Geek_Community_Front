@@ -28,6 +28,7 @@ export interface getListInfo {
 }
 
 //后端返回的数据格式
+//msg返回的时候大部分是string，但是注册的时候返回的对象，所以这里使用泛型，默认string
 export interface HttpResponse {
   code: number
   //data不知道返回的什么数据
@@ -37,4 +38,29 @@ export interface HttpResponse {
   msg?: string
   favs?: number
   count?: number
+}
+//文章列表定义数据类型
+interface Tag {
+  name: string
+  class: string
+}
+interface UserInfo {
+  name: string
+  pic: string
+  isVip: string
+}
+export interface Article {
+  title: string
+  content: string
+  created: string
+  catalog: string
+  fav: string
+  isEnd: string
+  reads: number
+  answer: number
+  status: string
+  isTop: string
+  sort: string
+  tags: Tag[]
+  uid: UserInfo
 }

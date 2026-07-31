@@ -28,11 +28,11 @@ const query = reactive({
   lists: [], // 文章详情
 })
 const { lists } = toRefs(query)
-//下一页
-const nextPage = () => {
-  query.page++
-  _getList()
-}
+//top一般没有 下一页
+// const nextPage = () => {
+//   query.page++
+//   _getList()
+// }
 //获取文章列表
 const _getList = async () => {
   const options = {

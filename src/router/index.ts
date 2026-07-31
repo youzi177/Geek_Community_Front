@@ -37,12 +37,14 @@ const router = createRouter({
     {
       path: '/',
       component: HomeView,
+      // 综合首页
       children: [
         {
           path: '',
           name: 'index',
           component: Index,
         },
+        //其他分类下的首页
         {
           path: '/index/:catalog',
           name: 'catalog',
@@ -50,16 +52,19 @@ const router = createRouter({
         },
       ],
     },
+    // 登录
     {
       path: '/login',
       name: 'login',
       component: login,
     },
+    // 注册
     {
       path: '/reg',
       name: 'reg',
       component: reg,
     },
+    // 找回密码
     {
       path: '/forget',
       name: 'forget',
@@ -76,7 +81,7 @@ const router = createRouter({
       path: '/center',
       //name: 'center',
       component: Center,
-      meta: { requiresAuth: true }, //路由元信息
+      meta: { requiresAuth: true }, //路由元信息，需要登录才能进去的路由
       //center路由守卫
       // beforeEnter: () => {
       //   const auth = useAuthStore()
@@ -100,10 +105,10 @@ const router = createRouter({
       //   return true
       // },
       children: [
+        // 用户中心
         {
           path: '',
           name: 'center',
-
           component: UserCenter,
         },
         // 基本设置
@@ -115,22 +120,25 @@ const router = createRouter({
           //   name: 'info',
           // },
           children: [
+            // 我的资料
             {
               path: 'info',
               name: 'info',
               component: MyInfo,
             },
-            //子路由不要以 / 开头，否则它会被当成根路径路由，不会拼接父级路径。
+            //修改头像子路由不要以 / 开头，否则它会被当成根路径路由，不会拼接父级路径。
             {
               path: 'pic',
               name: 'pic',
               component: PicUpload,
             },
+            // 修改密码
             {
               path: 'password',
               name: 'password',
               component: Password,
             },
+            // 账号绑定
             {
               path: 'accounts',
               name: 'accounts',
@@ -138,27 +146,19 @@ const router = createRouter({
             },
           ],
         },
-        {
-          path: 'msg',
-          name: 'msg',
-          component: UserMsg,
-        },
-        {
-          path: 'others',
-          name: 'others',
-          component: UserOthers,
-        },
         // 我的贴子
         {
           path: 'posts',
           name: 'posts',
           component: UserPosts,
           children: [
+            // 发表的贴子
             {
               path: 'mypost',
               name: 'mypost',
               component: MyPost,
             },
+            // 收藏贴子
             {
               path: 'mycollection',
               name: 'mycollection',
@@ -166,12 +166,27 @@ const router = createRouter({
             },
           ],
         },
+        // 我的消息
+        {
+          path: 'msg',
+          name: 'msg',
+          component: UserMsg,
+        },
+        // 其他设置
+        {
+          path: 'others',
+          name: 'others',
+          component: UserOthers,
+        },
       ],
     },
   ],
 })
 //全局路由守卫 vuerouter5不推荐使用next
 router.beforeEach((to) => {
+  //pinia
+  const AuthStore = useAuthStore()
+  const UserStore = useUserStore()
   //第一种解决方式：
   // if (to.name === 'login') {
   //   return true
@@ -184,21 +199,19 @@ router.beforeEach((to) => {
     const payload = jwtDecode<{ exp: number }>(token)
     //如果没过期
     if (moment().isBefore(moment(payload.exp * 1000))) {
-      useAuthStore().setToken(token)
-      useUserStore().setUserInfo(userInfo)
-      useAuthStore().setisLogin(true)
+      AuthStore.setToken(token)
+      UserStore.setUserInfo(userInfo)
+      AuthStore.setisLogin(true)
       return true
     } else {
       localStorage.clear()
     }
   }
   //第二种：
-
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     //需要登录的页面
-    const auth = useAuthStore()
     // 未登录
-    if (!auth.isLogin) {
+    if (!AuthStore.isLogin) {
       return {
         name: 'login',
       }

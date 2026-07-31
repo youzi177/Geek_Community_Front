@@ -52,13 +52,14 @@
 import { computed } from 'vue'
 import _ from 'lodash'
 import { formatDate } from '@/utils/formatDate'
+import type { Article } from '@/common/interface'
 interface Props {
-  list: Array<any> //文章的信息
+  list: Array<Article> //文章的信息
   isShow?: boolean //是否显示更多求解
   isEnd?: boolean //是否最后一页
 }
 //3.5写法
-const { list, isShow = true, isEnd = false } = defineProps<Props>()
+const { list = [], isShow = true, isEnd = false } = defineProps<Props>()
 //计算属性
 const items = computed(() => {
   _.map(list, (item) => {

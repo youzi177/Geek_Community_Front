@@ -32,3 +32,13 @@ export const popup = (msg: string, type = '', delay = 2000) => {
 //     app.config.globalProperties.$pop = popup
 //   },
 // }
+
+//setup使用方式：
+// mian.ts
+// import Popup from './plugin'
+// app.use(Popup)
+
+//组件使用
+// import { getCurrentInstance } from 'vue'
+// const instance = getCurrentInstance()
+// instance?.proxy?.$pop('操作成功')

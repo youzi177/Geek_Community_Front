@@ -9,35 +9,14 @@
 <script lang="ts" setup>
 // Vue3 Composition API
 import { ref, onMounted } from 'vue'
-
-/**
- * 接收父级动态创建组件时传入的参数
- */
-const props = defineProps({
-  // 动画类型
-  type: {
-    type: String,
-    default: '',
-  },
-
-  // 显示内容
-  msg: {
-    type: String,
-    default: '',
-  },
-
-  // 自动关闭时间
-  delay: {
-    type: Number,
-    default: 2000,
-  },
-
-  // 外部传入的销毁方法
-  unmount: {
-    type: Function,
-    default: () => {},
-  },
-})
+interface Props {
+  type?: string // 动画类型
+  msg: string // 显示内容
+  delay: number // 自动关闭时间
+  unmount: () => void // 外部传入的销毁方法
+}
+//3.5写法
+const { type, msg, delay = 2000, unmount } = defineProps<Props>()
 
 // 获取 DOM 节点
 const tips = ref<HTMLElement | null>(null)
@@ -61,8 +40,8 @@ onMounted(() => {
 
   // 延迟销毁组件
   setTimeout(() => {
-    props.unmount()
-  }, props.delay)
+    unmount()
+  }, delay)
 })
 </script>
 

@@ -85,14 +85,18 @@ import { useAuthStore, useUserStore } from '@/stores'
 import { computed, ref } from 'vue'
 import { myconfirm } from './modules/alert'
 import router from '@/router'
+//pinia
+const AuthStore = useAuthStore()
+const UserStore = useUserStore()
+
 //是否登录
 const isShow = computed(() => {
-  return useAuthStore().isLogin
+  return AuthStore.isLogin
 })
 //用户信息
 const userInfo = computed(() => {
   return (
-    useUserStore().userInfo || {
+    UserStore.userInfo || {
       name: '',
       pic: '',
       isVip: '0',
@@ -127,9 +131,9 @@ const logout = () => {
     () => {
       //清除状态
       localStorage.clear()
-      useUserStore().setUserInfo({ name: '', pic: '', isVip: '', count: 0, favs: 0, isSign: false })
-      useAuthStore().setisLogin(false)
-      useAuthStore().setToken('')
+      UserStore.setUserInfo({ name: '', pic: '', isVip: '', count: 0, favs: 0, isSign: false })
+      AuthStore.setisLogin(false)
+      AuthStore.setToken('')
       //跳转到首页
       router.push({ name: 'index' })
     },

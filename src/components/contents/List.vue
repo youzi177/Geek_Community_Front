@@ -43,9 +43,7 @@ const route = useRoute()
 //监听未结/已结/精华/最新/热议
 watch(
   () => query.current,
-  (newVal, oldVal) => {
-    // console.log('旧:', oldVal)
-    // console.log('新:', newVal)
+  () => {
     query.page = 0
     query.isEnd = false
     query.lists = []
@@ -55,11 +53,7 @@ watch(
 //监听分类路由
 watch(
   () => route.params.catalog,
-  (newVal, oldVal) => {
-    // console.log('旧:', oldVal)
-    // console.log('新:', newVal)
-
-    console.log(newVal)
+  (newVal) => {
     const catalog = newVal
     if (typeof catalog !== 'undefined' && catalog !== '') {
       query.catalog = catalog as string
@@ -142,6 +136,7 @@ const _getList = async () => {
       }
     }
   } catch (error) {
+    console.log(error)
     //错误了也要先把锁打开
     query.isRepeat = false
   }

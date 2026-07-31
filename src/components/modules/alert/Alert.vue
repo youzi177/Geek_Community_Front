@@ -17,10 +17,10 @@
 <script lang="ts" setup>
 interface Props {
   msg: string //显示内容
-  unmount: Function //删除dom
+  unmount: () => void //删除dom
   type: string //alert还是其他
-  cancelEvent?: Function //取消事件
-  successEvent?: Function //确定事件
+  cancelEvent?: () => void //取消事件
+  successEvent?: () => void //确定事件
 }
 //3.5写法
 const { msg = '', unmount, type = 'alert', cancelEvent, successEvent } = defineProps<Props>()
