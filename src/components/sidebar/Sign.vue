@@ -43,6 +43,7 @@ import { useUserStore, useAuthStore } from '@/stores/index.ts'
 import { userSign } from '@/api/user.ts'
 import type { HttpResponse } from '@/common/interface.ts'
 import { myalert } from '../modules/alert/index.tsx'
+import { popup } from '../modules/pop/index.tsx'
 //pinia
 const userStore = useUserStore()
 const authStore = useAuthStore()
@@ -108,7 +109,8 @@ const close = () => {
 // 签到
 const sign = async () => {
   if (!isLogin.value) {
-    myalert('请先登录')
+    //myalert('请先登录')
+    popup('请先登录', 'shake')
     return
   }
   const result = await userSign()
@@ -120,6 +122,8 @@ const sign = async () => {
       //更新userinfo
       user.favs = favs
       user.count = count
+      //加入一个issign
+      //user.isSign = true
       userStore.setUserInfo(user)
     }
   } else {
