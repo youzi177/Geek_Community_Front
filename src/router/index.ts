@@ -20,6 +20,7 @@ const Password = () => import('@/components/user/common/Password.vue')
 const Accounts = () => import('@/components/user/common/Accounts.vue')
 const MyPost = () => import('@/components/user/common/MyPost.vue')
 const MyCollection = () => import('@/components/user/common/MyCollection.vue')
+const NoFound = () => import('@/pages/NoFound.vue')
 import { jwtDecode } from 'jwt-decode'
 import moment from 'dayjs'
 // import HomeView from '@/pages/home.vue'
@@ -179,6 +180,16 @@ const router = createRouter({
           component: UserOthers,
         },
       ],
+    },
+    // 404页面
+    {
+      path: '/404',
+      component: NoFound,
+    },
+    // 匹配所有不存在的路由
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/404',
     },
   ],
 })
