@@ -131,7 +131,15 @@ const logout = () => {
     () => {
       //清除状态
       localStorage.clear()
-      UserStore.setUserInfo({ name: '', pic: '', isVip: '', count: 0, favs: 0, isSign: false })
+      UserStore.setUserInfo({
+        name: '',
+        pic: '',
+        isVip: '',
+        count: 0,
+        favs: 0,
+        isSign: false,
+        lastSign: null,
+      })
       AuthStore.setisLogin(false)
       AuthStore.setToken('')
       //跳转到首页

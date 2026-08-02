@@ -38,6 +38,7 @@ export interface HttpResponse {
   msg?: string
   favs?: number
   count?: number
+  lastSign?: Date
 }
 //文章列表定义数据类型
 interface Tag {
