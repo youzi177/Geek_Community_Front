@@ -38,11 +38,27 @@
             class="layui-input"
           />
         </div>
-        <div class="layui-inline">
-          <div class="layui-input-inline">
-            <input type="radio" name="sex" value="0" checked title="男" />
-            <input type="radio" name="sex" value="1" title="女" />
-          </div>
+      </div>
+      <!-- 性别选择 -->
+      <div class="layui-form-item">
+        <label for="L_city" class="layui-form-label">性别</label>
+        <div class="layui-input-inline gray mt1 ml1">
+          <label for="gender1" class="mr1">
+            <input id="gender1" type="radio" name="sex" value="0" title="男" v-model="gender" />
+            <i
+              class="layui-icon layui-icon-circle"
+              :class="{ 'layui-icon-radio': gender === '0' }"
+            ></i>
+            男
+          </label>
+          <label for="gender2">
+            <input id="gender2" type="radio" name="sex" value="1" title="女" v-model="gender" />
+            <i
+              class="layui-icon layui-icon-circle"
+              :class="{ 'layui-icon-radio': gender === '1' }"
+            ></i
+            >女</label
+          >
         </div>
       </div>
       <div class="layui-form-item">
@@ -78,6 +94,17 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { reactive, toRefs } from 'vue'
 
-<style></style>
+const state = reactive({
+  gender: '',
+})
+const { gender } = toRefs(state)
+</script>
+
+<style lang="scss" scoped>
+.layui-icon-radio {
+  color: #5fb878;
+}
+</style>
