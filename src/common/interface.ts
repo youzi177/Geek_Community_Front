@@ -26,6 +26,19 @@ export interface getListInfo {
   sort?: string
   status?: string
 }
+export interface UserInfo {
+  _id?: string
+  username?: string
+  name?: string
+  location?: string
+  gender?: string
+  regmark?: string
+  pic?: string
+  isSign?: boolean
+  lastSign?: string
+  count?: number
+  favs?: number
+}
 
 //后端返回的数据格式
 //msg返回的时候大部分是string，但是注册的时候返回的对象，所以这里使用泛型，默认string
@@ -45,7 +58,7 @@ interface Tag {
   name: string
   class: string
 }
-interface UserInfo {
+interface UserInfoArt {
   name: string
   pic: string
   isVip: string
@@ -63,5 +76,5 @@ export interface Article {
   isTop: string
   sort: string
   tags: Tag[]
-  uid: UserInfo
+  uid: UserInfoArt
 }

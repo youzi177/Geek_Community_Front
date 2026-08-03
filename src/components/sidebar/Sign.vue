@@ -197,7 +197,7 @@ onUnmounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @keyframes bounceIn {
   0% {
     opacity: 0;

@@ -7,6 +7,8 @@ import axios, {
 } from 'axios'
 import errorHandle from './errorHandle'
 import type { HttpResponse } from './interface'
+import { useAuthStore } from '@/stores'
+import publicConfig from '@/config'
 const CancelToken = axios.CancelToken //取消重复请求
 
 class HttpRequest {
@@ -47,10 +49,17 @@ class HttpRequest {
       (config) => {
         // 在请求发送之前执行某些操作
         // console.log('config', config)
-        const key =
-          config.url +
-          '&' +
-          config.method
+        let isPublic = false
+        publicConfig.publicPath.map((path) => {
+          isPublic = isPublic || path.test(config.url || '')
+        })
+        const AuthStore = useAuthStore()
+        const token = AuthStore.token
+        //鉴权路由并且带有token
+        if (!isPublic && token) {
+          config.headers.Authorization = 'Bearer ' + token
+        }
+        const key = config.url + '&' + config.method
         //检查有没有相同的请求正在发送，如果有，就调用它的取消函数取消旧请求，然后删除旧记录。
         this.removePending(key, true)
         //给当前请求绑定一个取消函数 c，并把它保存起来，方便以后通过 this.pending[key]() 取消这个请求。

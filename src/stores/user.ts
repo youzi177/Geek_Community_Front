@@ -7,6 +7,10 @@ interface UserInfo {
   favs: number
   isSign: boolean
   lastSign: Date | null
+  username: string
+  location: string
+  gender: string
+  remark: string
 }
 export const useUserStore = defineStore('user', {
   state() {

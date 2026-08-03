@@ -1,42 +1,55 @@
 <template>
   <!-- 基本信息 -->
   <div class="layui-form layui-form-pane layui-tab-item layui-show">
-    <form method="post">
+    <Form @submit="submit" v-slot="{ errors }" class="">
       <div class="layui-form-item">
         <label for="L_email" class="layui-form-label">邮箱</label>
         <div class="layui-input-inline">
-          <input
+          <Field
+            as="input"
+            rules="required|email"
             type="text"
-            id="L_email"
-            name="email"
-            required
-            lay-verify="email"
-            autocomplete="off"
-            value=""
+            name="username"
+            placeholder="请输入用户名"
             class="layui-input"
+            v-model="username"
           />
         </div>
-        <div class="layui-form-mid layui-word-aux">
+        <!-- 错误信息展示 -->
+        <div class="layui-form-mid">
+          <span style="color: #c00">{{ errors.username }}</span>
+        </div>
+        <!-- <div class="layui-form-mid layui-word-aux">
           如果您在邮箱已激活的情况下，变更了邮箱，需<a
             href="activate.html"
             style="font-size: 12px; color: #4f99cf"
             >重新验证邮箱</a
-          >。
-        </div>
+          >
+        </div> -->
       </div>
       <div class="layui-form-item">
         <label for="L_username" class="layui-form-label">昵称</label>
         <div class="layui-input-inline">
-          <input
+          <Field
             type="text"
-            id="L_username"
-            name="username"
-            required
-            lay-verify="required"
+            as="input"
+            rules="required|min:3|name"
+            placeholder="请输入昵称"
+            name="name"
             autocomplete="off"
-            value=""
             class="layui-input"
+            v-model="name"
           />
+        </div>
+        <div class="layui-form-mid">
+          <span style="color: #c00">{{ errors.name }}</span>
+        </div>
+      </div>
+      <!-- 城市 -->
+      <div class="layui-form-item">
+        <label for="L_city" class="layui-form-label">城市</label>
+        <div class="layui-input-inline">
+          <input type="text" name="city" class="layui-input" v-model="location" />
         </div>
       </div>
       <!-- 性别选择 -->
@@ -44,34 +57,21 @@
         <label for="L_city" class="layui-form-label">性别</label>
         <div class="layui-input-inline gray mt1 ml1">
           <label for="gender1" class="mr1">
-            <input id="gender1" type="radio" name="sex" value="0" title="男" v-model="gender" />
+            <input id="gender1" type="radio" name="sex" v-model="gender" value="0" title="男" />
             <i
               class="layui-icon layui-icon-circle"
-              :class="{ 'layui-icon-radio': gender === '0' }"
+              :class="gender === '0' ? 'layui-icon-radio' : 'layui-icon-circle'"
             ></i>
             男
           </label>
           <label for="gender2">
-            <input id="gender2" type="radio" name="sex" value="1" title="女" v-model="gender" />
+            <input id="gender2" type="radio" name="sex" v-model="gender" value="1" title="女" />
             <i
               class="layui-icon layui-icon-circle"
-              :class="{ 'layui-icon-radio': gender === '1' }"
-            ></i
-            >女</label
-          >
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label for="L_city" class="layui-form-label">城市</label>
-        <div class="layui-input-inline">
-          <input
-            type="text"
-            id="L_city"
-            name="city"
-            autocomplete="off"
-            value=""
-            class="layui-input"
-          />
+              :class="gender === '1' ? 'layui-icon-radio' : 'layui-icon-circle'"
+            ></i>
+            女
+          </label>
         </div>
       </div>
       <div class="layui-form-item layui-form-text">
@@ -79,28 +79,62 @@
         <div class="layui-input-block">
           <textarea
             placeholder="随便写些什么刷下存在感"
-            id="L_sign"
-            name="sign"
-            autocomplete="off"
             class="layui-textarea"
             style="height: 80px"
+            v-model="remark"
           ></textarea>
         </div>
       </div>
       <div class="layui-form-item">
-        <button class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
+        <button class="layui-btn" type="submit">确认修改</button>
       </div>
-    </form>
+    </Form>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs } from 'vue'
+import { Field, Form, type SubmissionContext } from 'vee-validate'
+import { onMounted, reactive, toRefs } from 'vue'
+import { updateUserInfo } from '@/api/user'
+import type { HttpResponse } from '@/common/interface'
+import { myalert } from '@/components/modules/alert'
+import { useUserStore } from '@/stores'
 
+const UserStore = useUserStore()
 const state = reactive({
-  gender: '',
+  username: '', //用户名
+  name: '', //昵称
+  location: '', //城市
+  gender: '', //性别
+  remark: '', //个性签名
 })
-const { gender } = toRefs(state)
+const { username, name, location, gender, remark } = toRefs(state)
+
+const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
+  const { setErrors } = actions
+  const result = await updateUserInfo({
+    username: state.username,
+    name: state.name,
+    location: state.location,
+    gender: state.gender,
+    regmark: state.remark,
+  })
+  const { code, msg } = result as HttpResponse
+  if (code === 200) {
+    myalert('更新成功')
+  } else {
+    //as Record<string, string> 是我确定返回的就是对象
+    setErrors(msg as unknown as Record<string, string>)
+  }
+}
+onMounted(() => {
+  const { username, name, location, gender, remark } = UserStore.userInfo
+  state.username = username || ''
+  state.name = name || ''
+  state.location = location || ''
+  state.gender = gender || ''
+  state.remark = remark || ''
+})
 </script>
 
 <style lang="scss" scoped>

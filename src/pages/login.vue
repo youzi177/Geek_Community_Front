@@ -109,13 +109,16 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
   //明确告知result就是HttpResponse类型
   const { code, msg, data, token } = result as HttpResponse
   if (code === 200) {
+    data.username = state.username //登录成功后把username存起来
+    // console.log(data)
+    UserStore.setUserInfo(data)
+    AuthStore.setisLogin(true)
+    AuthStore.setToken(token as string)
+    // 这要setUserInfo再清空信息
     state.username = ''
     state.password = ''
     state.code = ''
     actions.resetForm() //清除错误信息
-    UserStore.setUserInfo(data)
-    AuthStore.setisLogin(true)
-    AuthStore.setToken(token as string)
     router.push({ name: 'index' })
   } else if (code === 401) {
     setErrors({
