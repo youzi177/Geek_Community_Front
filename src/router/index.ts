@@ -21,6 +21,8 @@ const Accounts = () => import('@/components/user/common/Accounts.vue')
 const MyPost = () => import('@/components/user/common/MyPost.vue')
 const MyCollection = () => import('@/components/user/common/MyCollection.vue')
 const NoFound = () => import('@/pages/NoFound.vue')
+const Confirm = () => import('@/pages/Confirm.vue')
+const Reset = () => import('@/pages/Reset.vue')
 import { jwtDecode } from 'jwt-decode'
 import moment from 'dayjs'
 // import HomeView from '@/pages/home.vue'
@@ -70,6 +72,16 @@ const router = createRouter({
       path: '/forget',
       name: 'forget',
       component: forget,
+    },
+    {
+      path: '/confirm',
+      name: 'confirm',
+      component: Confirm,
+    },
+    {
+      path: '/reset',
+      name: 'reset',
+      component: Reset,
     },
     // 个人主页
     {

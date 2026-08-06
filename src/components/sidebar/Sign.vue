@@ -197,7 +197,7 @@ onUnmounted(() => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @keyframes bounceIn {
   0% {
     opacity: 0;
@@ -217,6 +217,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
 }
+
 .layui-layer {
   position: fixed;
   width: 300px;
@@ -242,26 +243,22 @@ onUnmounted(() => {
   .layui-layer-content {
     padding: 20px;
   }
-}
-.layui-tab-content {
-  padding: 0 10px;
-}
-.layui-tab-item {
-  line-height: 45px;
-  li {
-    border-bottom: 1px dotted #dcdcdc;
-    &:last-child {
-      border-bottom: none;
+  .layui-tab-content {
+    padding: 0 10px;
+  }
+  .layui-tab-item {
+    line-height: 45px;
+    li {
+      border-bottom: 1px dotted #dcdcdc;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 2px;
     }
   }
-  img {
-    width: 30px;
-    height: 30px;
-    border-radius: 2px;
-  }
-}
-//解决新版layui 间隔问题
-.layui-text p {
-  margin: 0;
 }
 </style>

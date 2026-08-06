@@ -81,7 +81,7 @@
             placeholder="随便写些什么刷下存在感"
             class="layui-textarea"
             style="height: 80px"
-            v-model="remark"
+            v-model="regmark"
           ></textarea>
         </div>
       </div>
@@ -106,9 +106,9 @@ const state = reactive({
   name: '', //昵称
   location: '', //城市
   gender: '', //性别
-  remark: '', //个性签名
+  regmark: '', //个性签名
 })
-const { username, name, location, gender, remark } = toRefs(state)
+const { username, name, location, gender, regmark } = toRefs(state)
 
 const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
   const { setErrors } = actions
@@ -117,23 +117,33 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
     name: state.name,
     location: state.location,
     gender: state.gender,
-    regmark: state.remark,
+    regmark: state.regmark,
   })
   const { code, msg } = result as HttpResponse
   if (code === 200) {
-    myalert('更新成功')
+    UserStore.setUserInfo({
+      //不应该立即更新邮箱的缓存，只有用户点击邮件确认修改之后，清除缓存重新登录
+      // username: state.username,
+      name: state.name,
+      location: state.location,
+      gender: state.gender,
+      regmark: state.regmark,
+    })
+    myalert(msg as string)
+  } else if (code === 500) {
+    myalert(msg as string)
   } else {
     //as Record<string, string> 是我确定返回的就是对象
     setErrors(msg as unknown as Record<string, string>)
   }
 }
 onMounted(() => {
-  const { username, name, location, gender, remark } = UserStore.userInfo
+  const { username, name, location, gender, regmark } = UserStore.userInfo
   state.username = username || ''
   state.name = name || ''
   state.location = location || ''
   state.gender = gender || ''
-  state.remark = remark || ''
+  state.regmark = regmark || ''
 })
 </script>
 

@@ -34,7 +34,7 @@
                     <Field
                       type="password"
                       as="input"
-                      rules="required|min:6"
+                      rules="required|min:6|max:16"
                       name="password"
                       class="layui-input"
                       v-model="password"

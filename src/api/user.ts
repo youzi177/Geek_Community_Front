@@ -1,5 +1,6 @@
 import type { UserInfo } from '@/common/interface'
 import axios from '@/common/request'
+import qs from 'qs'
 
 //用户签到
 const userSign = () => {
@@ -9,4 +10,9 @@ const userSign = () => {
 const updateUserInfo = (data: UserInfo) => {
   return axios.post('/user/basic', data)
 }
-export { userSign, updateUserInfo }
+//确认修改用户名
+const updateUsername = (data: { username: string }) => {
+  return axios.get('/public/reset-email?' + qs.stringify(data))
+}
+
+export { userSign, updateUserInfo, updateUsername }

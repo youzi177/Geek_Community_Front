@@ -87,6 +87,33 @@
                     <span style="color: #c00">{{ errors.repassword }}</span>
                   </div>
                 </div>
+                <!-- <div class="layui-form-item">
+                  <label for="L_vercode" class="layui-form-label">邮箱验证码</label>
+                  <div class="layui-input-inline">
+                    <Field
+                      type="text"
+                      name="emailCode"
+                      as="input"
+                      placeholder="请输入邮箱验证码"
+                      rules="required"
+                      autocomplete="off"
+                      class="layui-input"
+                      v-model="emailCode"
+                    />
+                  </div>
+                  <button
+                    class="layui-btn"
+                    type="button"
+                    @click="SendCode"
+                    :class="{ 'lay-disabled': isClick }"
+                  >
+                    {{ emailCodeMsg }}
+                  </button>
+
+                  <div class="layui-form-mid">
+                    <span style="color: #c00">{{ errors.emailCode }}</span>
+                  </div>
+                </div> -->
                 <div class="layui-form-item">
                   <label for="L_vercode" class="layui-form-label">验证码</label>
                   <div class="layui-input-inline">

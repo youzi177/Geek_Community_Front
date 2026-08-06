@@ -10,7 +10,7 @@ interface UserInfo {
   username: string
   location: string
   gender: string
-  remark: string
+  regmark: string
 }
 export const useUserStore = defineStore('user', {
   state() {
@@ -21,10 +21,13 @@ export const useUserStore = defineStore('user', {
 
   getters: {},
   actions: {
-    //设置用户基本信息
-    setUserInfo(value: UserInfo) {
-      this.userInfo = value
-      localStorage.setItem('userInfo', JSON.stringify(value)) //localStorage存用户信息
+    //设置用户基本信息，Partial<UserInfo>表示修改部分数据
+    setUserInfo(value: Partial<UserInfo>) {
+      this.userInfo = {
+        ...this.userInfo,
+        ...value,
+      }
+      localStorage.setItem('userInfo', JSON.stringify(this.userInfo)) //localStorage存用户信息
     },
   },
 })

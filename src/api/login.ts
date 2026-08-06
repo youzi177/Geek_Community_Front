@@ -1,4 +1,4 @@
-import type { ForgetInfo, LoginInfo, RegInfo } from '@/common/interface'
+import type { ForgetInfo, LoginInfo, RegInfo, ResetInfo } from '@/common/interface'
 import axios from '@/common/request'
 
 //验证码
@@ -21,4 +21,9 @@ const login = (option: LoginInfo) => {
 const reg = (option: RegInfo) => {
   return axios.post('/login/reg', { ...option })
 }
-export { getCode, forget, login, reg }
+/**
+ * 重置密码接口
+ * @param {*} info 重置密码信息
+ */
+const reset = (option: ResetInfo) => axios.post('/login/reset', { ...option })
+export { getCode, forget, login, reg, reset }

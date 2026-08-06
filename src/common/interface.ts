@@ -39,6 +39,12 @@ export interface UserInfo {
   count?: number
   favs?: number
 }
+export interface ResetInfo {
+  key: string | null
+  password: string
+  code: string
+  sid: string
+}
 
 //后端返回的数据格式
 //msg返回的时候大部分是string，但是注册的时候返回的对象，所以这里使用泛型，默认string
