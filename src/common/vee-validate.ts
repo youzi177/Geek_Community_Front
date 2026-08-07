@@ -36,6 +36,8 @@ const config = {
     oldpassword: '旧密码',
     title: '标题',
     catalog: '分类',
+    nowpassword: '当前密码',
+    newpassword: '新密码',
   },
   fields: {
     catalog: {

@@ -14,5 +14,9 @@ const updateUserInfo = (data: UserInfo) => {
 const updateUsername = (data: { username: string }) => {
   return axios.get('/public/reset-email?' + qs.stringify(data))
 }
+//修改密码
+const changePassword = (data: { oldpwd: string; newpwd: string }) => {
+  return axios.post('user/changePassword', data)
+}
 
-export { userSign, updateUserInfo, updateUsername }
+export { userSign, updateUserInfo, updateUsername, changePassword }
