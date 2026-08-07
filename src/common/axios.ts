@@ -26,9 +26,10 @@ class HttpRequest {
   getConfig() {
     const config = {
       baseURL: this.baseUrl,
-      headers: {
-        'content-Type': 'application/json;charset=utf-8',
-      },
+      // 不要固定headers，axios会自行判断，如果加了，formdata就会出错
+      // headers: {
+      //   'content-Type': 'application/json;charset=utf-8',
+      // },
       timeout: 10000, // 10秒断定失败
     }
     return config
@@ -122,11 +123,13 @@ class HttpRequest {
   post(
     url: string,
     data?: AxiosRequestConfig['data'],
+    config?: AxiosRequestConfig, // 新增
   ): Promise<AxiosResponse> | Promise<HttpResponse> {
     return this.request({
       method: 'post',
       url: url,
       data: data,
+      ...config, // 合并外部配置，timeout 会覆盖默认的 10000
     })
   }
 }

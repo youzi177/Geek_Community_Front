@@ -31,5 +31,15 @@ const getTips = () => {
 const getLinks = () => {
   return axios.get('/public/links')
 }
+/**
+ * 图片上传接口
+ * @param formData
+ * @returns
+ */
+const uploadImg = (formData: FormData) => {
+  return axios.post('/content/upload', formData, {
+    timeout: 10 * 60 * 1000, //10分钟超时
+  })
+}
 
-export { getList, getTips, getLinks, getTop }
+export { getList, getTips, getLinks, getTop, uploadImg }
