@@ -23,6 +23,7 @@ const MyCollection = () => import('@/components/user/common/MyCollection.vue')
 const NoFound = () => import('@/pages/NoFound.vue')
 const Confirm = () => import('@/pages/Confirm.vue')
 const Reset = () => import('@/pages/Reset.vue')
+const Add = () => import('@/components/contents/Add.vue')
 import { jwtDecode } from 'jwt-decode'
 import moment from 'dayjs'
 // import HomeView from '@/pages/home.vue'
@@ -192,6 +193,12 @@ const router = createRouter({
           component: UserOthers,
         },
       ],
+    },
+    // 发帖
+    {
+      path: '/add',
+      name: 'add',
+      component: Add,
     },
     // 404页面
     {

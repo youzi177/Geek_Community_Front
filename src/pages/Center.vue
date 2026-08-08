@@ -20,8 +20,13 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-
-const lists = ref([
+interface MenuItem {
+  name: string
+  icon: string
+  link: string
+  match: string[]
+}
+const lists = ref<MenuItem[]>([
   {
     name: '我的主页',
     icon: 'layui-icon-home',
@@ -63,8 +68,12 @@ const lists = ref([
 ])
 
 // 判断当前菜单是否应该高亮
-const isActive = (item: any) => {
-  return route.matched.some((routeItem) => item.match.includes(routeItem.name))
+const isActive = (item: MenuItem) => {
+  return route.matched.some((routeItem) => {
+    const name = routeItem.name
+
+    return typeof name === 'string' && item.match.includes(name)
+  })
 }
 </script>
 
