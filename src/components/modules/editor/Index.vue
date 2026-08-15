@@ -56,13 +56,17 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onBeforeUnmount, onMounted, reactive, ref, toRefs } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, toRefs } from 'vue'
 import Face from './Face.vue'
 import ImgUpload from './ImgUpload.vue'
 import LinkAdd from './LinkAdd.vue'
 import Quote from './Quote.vue'
 import Code from './Code.vue'
 import Preview from './Preview.vue'
+// 顶层声明 emits，返回 emit 函数
+const emit = defineEmits<{
+  (e: 'changeContent', content: string): void
+}>()
 // 编辑器面板的状态管理
 const state = reactive({
   current: -1,
@@ -128,6 +132,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.querySelector('body')?.removeEventListener('click', handleBodyClick)
   window.removeEventListener('resize', handleResize)
+})
+onUpdated(() => {
+  // 触发事件，把 item 传出去
+  emit('changeContent', content.value)
 })
 //添加表情
 const addFace = (item: string) => {

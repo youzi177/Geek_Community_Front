@@ -27,8 +27,11 @@
                         :class="{ 'layui-form-selected': isSelect }"
                       >
                         <div class="layui-select-title">
-                          <input
+                          <Field
                             type="text"
+                            name="catalog"
+                            rules="is_not:请选择"
+                            as="input"
                             placeholder="请选择"
                             readonly
                             v-model="selectedText"
@@ -48,24 +51,30 @@
                         </dl>
                       </div>
                     </div>
+                    <div class="layui-row">
+                      <span style="color: #c00">{{ errors.catalog }}</span>
+                    </div>
                   </div>
                   <div class="layui-col-md9">
                     <label for="L_title" class="layui-form-label">标题</label>
                     <div class="layui-input-block">
-                      <input
+                      <Field
                         type="text"
-                        id="L_title"
+                        id="title"
+                        as="input"
                         name="title"
-                        required
-                        lay-verify="required"
-                        autocomplete="off"
                         class="layui-input"
+                        rules="required"
+                        v-model="title"
                       />
                       <!-- <input type="hidden" name="id" value="{{d.edit.id}}"> -->
                     </div>
+                    <div class="layui-row">
+                      <span style="color: #c00">{{ errors.title }}</span>
+                    </div>
                   </div>
                 </div>
-                <Editor></Editor>
+                <Editor @changeContent="add"></Editor>
                 <div class="layui-form-item">
                   <div class="layui-inline">
                     <label class="layui-form-label">悬赏飞吻</label>
@@ -145,6 +154,7 @@ import Editor from '@/components/modules/editor/Index.vue'
 import { Field, Form } from 'vee-validate'
 import Uselogin from '@/hooks/Uselogin'
 import { useAppStore } from '@/stores'
+import { myalert } from '../modules/alert'
 const appStore = useAppStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
@@ -177,8 +187,10 @@ const state1 = reactive({
     },
   ],
   favList: [20, 30, 50, 60, 80],
+  content: '',
+  title: '',
 })
-const { isSelect, isSelect_fav, cataIndex, favIndex, catalogs, favList } = toRefs(state1)
+const { isSelect, isSelect_fav, cataIndex, favIndex, catalogs, favList, title } = toRefs(state1)
 //下拉菜单文字
 const selectedText = computed({
   get: () => catalogs.value[cataIndex.value]?.text ?? '',
@@ -196,12 +208,22 @@ const chooseFav = (item: number, index: number) => {
   state1.favIndex = index
 }
 //发帖
-const submit = async () => {}
+const submit = async () => {
+  // 检测文章内容是否为空
+  if (state1.content.trim() === '') {
+    myalert('文章内容不得为空')
+    return
+  }
+}
 //挂载时执行
 onMounted(() => {
   setid()
   _getCode()
 })
+const add = (content: string) => {
+  state1.content = content
+  // console.log('🚀 ~ add ~ content:', content)
+}
 </script>
 
 <style></style>
