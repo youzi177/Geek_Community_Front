@@ -1,5 +1,5 @@
 <template>
-  <div class="layui-container fly-marginTop">
+  <div class="layui-container fly-marginTop" :class="{ 'd-hide': isHide }">
     <div class="fly-panel" pad20 style="padding-top: 5px">
       <!--<div class="fly-none">没有权限</div>-->
       <div class="layui-form layui-form-pane">
@@ -144,6 +144,8 @@ import { computed, onMounted, reactive, toRefs } from 'vue'
 import Editor from '@/components/modules/editor/Index.vue'
 import { Field, Form } from 'vee-validate'
 import Uselogin from '@/hooks/Uselogin'
+import { useAppStore } from '@/stores'
+const appStore = useAppStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
@@ -185,6 +187,8 @@ const selectedText = computed({
     if (item) item.text = val
   },
 })
+//解决预览时候偶尔双滚动条的问题
+const isHide = computed(() => appStore.isHide)
 const chooseCatalog = (item: object, index: number) => {
   state1.cataIndex = index
 }

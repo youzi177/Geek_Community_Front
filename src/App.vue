@@ -9,6 +9,7 @@ import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import '@/assets/layui/css/layui.css'
 import '@/assets/css/global.css'
+import '@/assets/layui/css/modules/layer/default/layer.css'
 </script>
 
 <style lang="scss">
@@ -66,5 +67,16 @@ import '@/assets/css/global.css'
 }
 .pull-right {
   float: right !important;
+}
+//预览图片
+.himg {
+  height: 50%;
+  width: 50%;
+}
+//解决预览时候偶尔双滚动条的问题
+.d-hide {
+  position: absolute;
+  overflow: hidden;
+  height: 0;
 }
 </style>

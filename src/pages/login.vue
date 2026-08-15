@@ -119,7 +119,9 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
     state.password = ''
     state.code = ''
     actions.resetForm() //清除错误信息
-    router.push({ name: 'index' })
+    console.log('准备跳转, isLogin:', AuthStore.isLogin, 'token:', AuthStore.token)
+    await router.push({ name: 'index' })
+    console.log('跳转完成，当前路由:', router.currentRoute.value.name)
   } else if (code === 401) {
     setErrors({
       code: msg,
