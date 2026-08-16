@@ -45,6 +45,14 @@ export interface ResetInfo {
   code: string
   sid: string
 }
+export interface PostData {
+  title: string
+  catalog: string
+  content: string
+  fav: number
+  code: string
+  sid: string
+}
 
 //后端返回的数据格式
 //msg返回的时候大部分是string，但是注册的时候返回的对象，所以这里使用泛型，默认string

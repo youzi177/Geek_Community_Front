@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, toRefs } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, onUpdated, reactive, ref, toRefs, watch } from 'vue'
 import Face from './Face.vue'
 import ImgUpload from './ImgUpload.vue'
 import LinkAdd from './LinkAdd.vue'
@@ -67,6 +67,11 @@ import Preview from './Preview.vue'
 const emit = defineEmits<{
   (e: 'changeContent', content: string): void
 }>()
+interface Props {
+  initContent: string
+}
+//3.5写法
+const { initContent } = defineProps<Props>()
 // 编辑器面板的状态管理
 const state = reactive({
   current: -1,
@@ -80,6 +85,15 @@ const state = reactive({
 const textEdit = ref<HTMLTextAreaElement | null>(null)
 
 const { icons, modal, current, codeWidth, codeHeight, content } = toRefs(state)
+watch(
+  () => initContent,
+  (newval) => {
+    // console.log('🚀 ~ oldval:', oldval)
+    // console.log('🚀 ~ newval:', newval)
+    content.value = newval
+  },
+)
+
 // 点击页面任意位置时的处理函数
 const handleBodyClick = (e: MouseEvent) => {
   // 判断点击位置是否在图标栏或弹窗容器内

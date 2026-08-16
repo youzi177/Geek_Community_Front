@@ -1,4 +1,4 @@
-import type { getListInfo } from '@/common/interface'
+import type { getListInfo, PostData } from '@/common/interface'
 import axios from '@/common/request'
 import qs from 'qs'
 /**
@@ -41,5 +41,9 @@ const uploadImg = (formData: FormData) => {
     timeout: 10 * 60 * 1000, //10分钟超时
   })
 }
+//发表新帖
+const addPost = (data: PostData) => {
+  return axios.post('/content/add', { ...data })
+}
 
-export { getList, getTips, getLinks, getTop, uploadImg }
+export { getList, getTips, getLinks, getTop, uploadImg, addPost }

@@ -74,7 +74,7 @@
                     </div>
                   </div>
                 </div>
-                <Editor @changeContent="add"></Editor>
+                <Editor @changeContent="add" :initContent="state1.content"></Editor>
                 <div class="layui-form-item">
                   <div class="layui-inline">
                     <label class="layui-form-label">悬赏飞吻</label>
@@ -153,8 +153,10 @@ import { computed, onMounted, reactive, toRefs } from 'vue'
 import Editor from '@/components/modules/editor/Index.vue'
 import { Field, Form } from 'vee-validate'
 import Uselogin from '@/hooks/Uselogin'
-import { useAppStore } from '@/stores'
-import { myalert } from '../modules/alert'
+import { useAppStore, useAuthStore } from '@/stores'
+import { myalert, myconfirm } from '../modules/alert'
+import { addPost } from '@/api/content'
+import type { HttpResponse } from '@/common/interface'
 const appStore = useAppStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
@@ -199,6 +201,7 @@ const selectedText = computed({
     if (item) item.text = val
   },
 })
+
 //解决预览时候偶尔双滚动条的问题
 const isHide = computed(() => appStore.isHide)
 const chooseCatalog = (item: object, index: number) => {
@@ -214,14 +217,51 @@ const submit = async () => {
     myalert('文章内容不得为空')
     return
   }
+  const result = await addPost({
+    title: state1.title,
+    catalog: state1.catalogs[state1.cataIndex]?.value || '',
+    content: state1.content,
+    fav: state1.favList[state1.favIndex]!, //断定不为undefined
+    code: state.code,
+    sid: useAuthStore().sid,
+  })
+  //明确告知result就是HttpResponse类型
+  const { code, data } = result as HttpResponse
 }
 //挂载时执行
 onMounted(() => {
   setid()
   _getCode()
+  const saveData = localStorage.getItem('addData')
+  if (saveData && saveData != '') {
+    myconfirm(
+      '是否加载未编辑的内容',
+      () => {
+        const obj = JSON.parse(saveData)
+        state1.content = obj.content
+        state1.title = obj.title
+        state1.cataIndex = obj.cataIndex
+        state1.favIndex = obj.favIndex
+      },
+      () => {
+        localStorage.setItem('addData', '')
+      },
+    )
+  }
 })
+// 添加文字
 const add = (content: string) => {
   state1.content = content
+  const saveData = {
+    title: state1.title,
+    cataIndex: state1.cataIndex,
+    content: state1.content,
+    favIndex: state1.favIndex,
+  }
+  if (state1.title.trim() !== '' && state1.content.trim() !== '') {
+    localStorage.setItem('addData', JSON.stringify(saveData))
+  }
+
   // console.log('🚀 ~ add ~ content:', content)
 }
 </script>

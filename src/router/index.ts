@@ -199,6 +199,7 @@ const router = createRouter({
       path: '/add',
       name: 'add',
       component: Add,
+      meta: { requiresAuth: true }, //路由元信息，需要登录才能进去的路由
     },
     // 404页面
     {
