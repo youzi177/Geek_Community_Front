@@ -58,7 +58,7 @@
                   > -->
                 </dd>
                 <dd>
-                  <router-link :to="{ name: 'user' }"
+                  <router-link :to="{ name: 'user', params: { uid: userInfo._id } }"
                     ><i class="layui-icon layui-icon-home"></i>我的主页</router-link
                   >
                 </dd>
@@ -100,6 +100,7 @@ const userInfo = computed(() => {
       name: '',
       pic: '',
       isVip: '0',
+      _id: '',
     }
   )
 })

@@ -11,6 +11,7 @@ interface UserInfo {
   location: string
   gender: string
   regmark: string
+  _id: string
 }
 export const useUserStore = defineStore('user', {
   state() {
