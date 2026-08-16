@@ -88,9 +88,10 @@ const router = createRouter({
     },
     // 个人主页
     {
-      path: '/user',
+      path: '/user/:uid',
       name: 'user',
       component: User,
+      props: true,
     },
     //个人中心
     {

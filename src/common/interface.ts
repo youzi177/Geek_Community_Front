@@ -76,6 +76,7 @@ interface UserInfoArt {
   name: string
   pic: string
   isVip: string
+  _id: string
 }
 export interface Article {
   title: string
@@ -90,5 +91,6 @@ export interface Article {
   isTop: string
   sort: string
   tags: Tag[]
+  _id: string
   uid: UserInfoArt
 }
