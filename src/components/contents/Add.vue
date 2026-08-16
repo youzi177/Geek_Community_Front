@@ -157,6 +157,7 @@ import { useAppStore, useAuthStore } from '@/stores'
 import { myalert, myconfirm } from '../modules/alert'
 import { addPost } from '@/api/content'
 import type { HttpResponse } from '@/common/interface'
+import router from '@/router'
 const appStore = useAppStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
@@ -226,7 +227,16 @@ const submit = async () => {
     sid: useAuthStore().sid,
   })
   //明确告知result就是HttpResponse类型
-  const { code, data } = result as HttpResponse
+  const { code, msg } = result as HttpResponse
+  if (code === 200) {
+    myalert('发帖成功~2S后跳转')
+    localStorage.setItem('addData', '')
+    setTimeout(() => {
+      router.push({ name: 'index' })
+    }, 2000)
+  } else {
+    myalert(msg as string)
+  }
 }
 //挂载时执行
 onMounted(() => {

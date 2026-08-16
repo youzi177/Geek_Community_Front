@@ -1,6 +1,6 @@
 <template>
   <Transition name="fade">
-    <div class="layui-layer layui-layer-page layui-edit-border edit-content" v-show="isShow">
+    <div class="layui-layer-page layui-edit-border edit-content layui-layer-prompt" v-show="isShow">
       <div class="layui-layer-title">插入图片</div>
       <div class="layui-layer-content">
         <ul class="layui-form layui-form-pane">

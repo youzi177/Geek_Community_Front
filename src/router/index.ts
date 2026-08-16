@@ -24,6 +24,8 @@ const NoFound = () => import('@/pages/NoFound.vue')
 const Confirm = () => import('@/pages/Confirm.vue')
 const Reset = () => import('@/pages/Reset.vue')
 const Add = () => import('@/components/contents/Add.vue')
+// 帖子详情组件
+const Detail = () => import('@/components/contents/Detail.vue')
 import { jwtDecode } from 'jwt-decode'
 import moment from 'dayjs'
 // import HomeView from '@/pages/home.vue'
@@ -200,6 +202,13 @@ const router = createRouter({
       name: 'add',
       component: Add,
       meta: { requiresAuth: true }, //路由元信息，需要登录才能进去的路由
+    },
+    // 帖子详情
+    {
+      path: '/detail/:tid',
+      name: 'detail',
+      component: Detail,
+      props: true,
     },
     // 404页面
     {
