@@ -156,7 +156,8 @@
             <!-- 无数据时 -->
             <!-- <li class="fly-none">消灭零回复</li> -->
           </ul>
-
+          <!-- 自定义分页组件 -->
+          <pageination :align="'center'"></pageination>
           <div class="layui-form layui-form-pane">
             <Form @submit="submit" v-slot="{ errors }">
               <Editor @changeContent="add" :initContent="state1.content"></Editor>
@@ -204,6 +205,7 @@ import Ads from '../sidebar/Ads.vue'
 import HotList from '../sidebar/HotList.vue'
 import Links from '../sidebar/Links.vue'
 import Editor from '@/components/modules/editor/Index.vue'
+import pageination from '@/components/modules/pageination/Index.vue'
 import Uselogin from '@/hooks/Uselogin'
 import { Field, Form } from 'vee-validate'
 //封装函数
