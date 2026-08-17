@@ -77,8 +77,8 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs } from 'vue'
-
+import { onMounted, reactive, toRefs } from 'vue'
+import _ from 'lodash'
 interface Props {
   align?: string //显示位置
   showType?: string //显示图片还是文字
@@ -86,6 +86,9 @@ interface Props {
   theme?: string
   hasTotal?: boolean //是否显示到第几页
   hasSelect?: boolean //是否显示一页显示多少条
+  total: number //多少条
+  current: number //页数
+  size: number //一页多少条
 }
 //3.5写法
 const {
@@ -95,17 +98,35 @@ const {
   theme = 'layui-bg-green',
   hasTotal = false,
   hasSelect = false,
+  total = 0,
+  current = 1,
+  size = 10,
 } = defineProps<Props>()
 
 const state = reactive({
   optIndex: 0,
   options: [10, 20, 30, 40, 50],
   isSelect: false,
+  pages: Array<number>(),
+  limit: 10,
 })
 const { optIndex, options, isSelect } = toRefs(state)
 const chooseFav = (item: number, index: number) => {
   state.optIndex = index
 }
+const initPages = () => {
+  const len = Math.ceil(total / size)
+  //5->[1,2,3,4,5]
+  state.pages = _.range(1, len + 1)
+}
+onMounted(() => {
+  //初始化分页长度
+  initPages()
+  //设置select的内容
+  state.limit = size
+  state.options = _.uniq(_.sortBy(_.concat(state.options, size)))
+  state.optIndex = state.options.indexOf(size)
+})
 </script>
 
 <style lang="scss" scoped>
