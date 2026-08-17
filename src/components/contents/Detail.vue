@@ -215,6 +215,9 @@ import Editor from '@/components/modules/editor/Index.vue'
 import pageination from '@/components/modules/pageination/Index.vue'
 import Uselogin from '@/hooks/Uselogin'
 import { Field, Form } from 'vee-validate'
+import { getDetail } from '@/api/content.ts'
+import { getComments } from '@/api/comments.ts'
+import type { HttpResponse } from '@/common/interface.ts'
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
@@ -223,18 +226,44 @@ const state1 = reactive({
   total: 10,
   size: 10,
   current: 0,
+  page: {}, //文章信息
+  comments: [], //评论列表
 })
 const { content, total, size, current } = toRefs(state1)
-
+interface Props {
+  tid: string //路由传参
+}
+//3.5写法
+const { tid } = defineProps<Props>()
 onMounted(() => {
   setid()
   _getCode()
+  getPostDetail()
+  getCommentsList()
 })
 const submit = () => {}
 const add = () => {}
 //翻页事件
 const handleChange = (val: number) => {
   current.value = val
+}
+//获取文章详情
+const getPostDetail = async () => {
+  const result = await getDetail(tid)
+  //明确告知result就是HttpResponse类型
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    console.log(data)
+  }
+}
+//获取文章评论数据
+const getCommentsList = async () => {
+  const result = await getComments(tid)
+  //明确告知result就是HttpResponse类型
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    console.log(data)
+  }
 }
 </script>
 
