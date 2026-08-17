@@ -11,29 +11,46 @@
       <!-- prev第一页 -->
       <a
         href="javascript:;"
-        class="layui-laypage-prev layui-disabled"
-        data-page="0"
+        class="layui-laypage-prev"
         v-show="showEnd"
+        :class="{ 'layui-disabled': current === 0 }"
         ><i class="layui-icon layui-icon-prev" v-if="showType === 'icon'"></i>
         <template v-else>首页</template>
       </a>
       <!-- left上一页 -->
-      <a href="javascript:;" data-page="2"
+      <a href="javascript:;" :class="{ 'layui-disabled': current === 0 }"
         ><i class="layui-icon layui-icon-left" v-if="showType === 'icon'"></i>
         <template v-else>上一页</template>
       </a>
-      <a href="javascript:;" data-page="1" :class="[true ? theme : '', true ? 'active' : '']">1</a>
-      <a href="javascript:;" data-page="2">2</a>
-      <a href="javascript:;" data-page="3">3</a>
-      <a href="javascript:;" data-page="4">4</a>
-      <a href="javascript:;" data-page="5">5</a>
+      <!-- <a href="javascript:;" data-page="1" :class="[true ? theme : '', true ? 'active' : '']">1</a> -->
+      <!-- current+2<pages.lenght 显示... -->
+      <!-- current-2>1 显示... -->
+      <a v-if="pages.length > 5 && current + 1 - 2 > 1" href="javascript:;" data-page="2">...</a>
+      <template v-for="(item, index) in pages" :key="index">
+        <a
+          v-if="item >= current + 1 - 2 && item <= current + 1 + 2"
+          href="javascript:;"
+          data-page="2"
+          :class="[current === index ? theme : '', current === index ? 'active' : '']"
+          >{{ item }}</a
+        >
+      </template>
+      <a v-if="pages.length > 5 && current + 1 + 2 < pages.length" href="javascript:;" data-page="2"
+        >...</a
+      >
+
       <!-- right下一页 -->
-      <a href="javascript:;" data-page="5">
+      <a href="javascript:;" :class="{ 'layui-disabled': current === pages.length - 1 }">
         <i class="layui-icon layui-icon-right" v-if="showType === 'icon'"></i>
         <template v-else>下一页</template>
       </a>
       <!-- next尾页 -->
-      <a href="javascript:;" class="layui-laypage-next" data-page="2" v-show="showEnd"
+      <a
+        href="javascript:;"
+        class="layui-laypage-next"
+        data-page="2"
+        v-show="showEnd"
+        :class="{ 'layui-disabled': current === pages.length - 1 }"
         ><i class="layui-icon layui-icon-next" v-if="showType === 'icon'"></i>
         <template v-else>尾页</template>
       </a>
@@ -99,7 +116,7 @@ const {
   hasTotal = false,
   hasSelect = false,
   total = 0,
-  current = 1,
+  current = 0,
   size = 10,
 } = defineProps<Props>()
 
@@ -110,7 +127,7 @@ const state = reactive({
   pages: Array<number>(),
   limit: 10,
 })
-const { optIndex, options, isSelect } = toRefs(state)
+const { optIndex, options, isSelect, pages } = toRefs(state)
 const chooseFav = (item: number, index: number) => {
   state.optIndex = index
 }
