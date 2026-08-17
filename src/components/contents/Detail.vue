@@ -159,14 +159,15 @@
           <!-- 自定义分页组件 -->
           <pageination
             :has-select="true"
-            :total="101"
-            :size="15"
-            :current="6"
+            :total="total"
+            :size="size"
+            :current="current"
             :show-end="true"
+            @change-current="handleChange"
           ></pageination>
           <div class="layui-form layui-form-pane">
             <Form @submit="submit" v-slot="{ errors }">
-              <Editor @changeContent="add" :initContent="state1.content"></Editor>
+              <Editor @changeContent="add" :initContent="content"></Editor>
               <div class="layui-form-item">
                 <label for="L_vercode" class="layui-form-label">验证码</label>
                 <div class="layui-input-inline">
@@ -219,7 +220,11 @@ const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
 const state1 = reactive({
   content: '',
+  total: 10,
+  size: 10,
+  current: 0,
 })
+const { content, total, size, current } = toRefs(state1)
 
 onMounted(() => {
   setid()
@@ -227,6 +232,10 @@ onMounted(() => {
 })
 const submit = () => {}
 const add = () => {}
+//翻页事件
+const handleChange = (val: number) => {
+  current.value = val
+}
 </script>
 
 <style lang="scss" scoped>

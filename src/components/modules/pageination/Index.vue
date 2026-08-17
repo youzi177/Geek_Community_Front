@@ -10,47 +10,57 @@
     <div class="layui-box layui-laypage layui-laypage-default">
       <!-- prev第一页 -->
       <a
-        href="javascript:;"
         class="layui-laypage-prev"
         v-show="showEnd"
         :class="{ 'layui-disabled': current === 0 }"
+        @click.prevent="home"
         ><i class="layui-icon layui-icon-prev" v-if="showType === 'icon'"></i>
         <template v-else>首页</template>
       </a>
       <!-- left上一页 -->
-      <a href="javascript:;" :class="{ 'layui-disabled': current === 0 }"
+      <a :class="{ 'layui-disabled': current === 0 }" @click.prevent="prev"
         ><i class="layui-icon layui-icon-left" v-if="showType === 'icon'"></i>
         <template v-else>上一页</template>
       </a>
       <!-- <a href="javascript:;" data-page="1" :class="[true ? theme : '', true ? 'active' : '']">1</a> -->
       <!-- current+2<pages.lenght 显示... -->
       <!-- current-2>1 显示... -->
-      <a v-if="pages.length > 5 && current + 1 - 2 > 1" href="javascript:;" data-page="2">...</a>
+      <a
+        v-if="pages.length > 5 && current + 1 - 2 > 1"
+        href="javascript:;"
+        data-page="2"
+        class="layui-disabled"
+        >...</a
+      >
       <template v-for="(item, index) in pages" :key="index">
         <a
           v-if="item >= current + 1 - 2 && item <= current + 1 + 2"
-          href="javascript:;"
           data-page="2"
           :class="[current === index ? theme : '', current === index ? 'active' : '']"
+          @click="changeIndex(index)"
           >{{ item }}</a
         >
       </template>
-      <a v-if="pages.length > 5 && current + 1 + 2 < pages.length" href="javascript:;" data-page="2"
+      <a
+        v-if="pages.length > 5 && current + 1 + 2 < pages.length"
+        href="javascript:;"
+        data-page="2"
+        class="layui-disabled"
         >...</a
       >
 
       <!-- right下一页 -->
-      <a href="javascript:;" :class="{ 'layui-disabled': current === pages.length - 1 }">
+      <a :class="{ 'layui-disabled': current === pages.length - 1 }" @click.prevent="next">
         <i class="layui-icon layui-icon-right" v-if="showType === 'icon'"></i>
         <template v-else>下一页</template>
       </a>
       <!-- next尾页 -->
       <a
-        href="javascript:;"
         class="layui-laypage-next"
         data-page="2"
         v-show="showEnd"
         :class="{ 'layui-disabled': current === pages.length - 1 }"
+        @click.prevent="end"
         ><i class="layui-icon layui-icon-next" v-if="showType === 'icon'"></i>
         <template v-else>尾页</template>
       </a>
@@ -122,28 +132,80 @@ const {
 
 const state = reactive({
   optIndex: 0,
-  options: [10, 20, 30, 40, 50],
+  options: [10, 20, 30, 50, 100],
   isSelect: false,
   pages: Array<number>(),
   limit: 10,
 })
 const { optIndex, options, isSelect, pages } = toRefs(state)
-const chooseFav = (item: number, index: number) => {
-  state.optIndex = index
-}
+
 const initPages = () => {
-  const len = Math.ceil(total / size)
+  const len = Math.ceil(total / state.limit)
   //5->[1,2,3,4,5]
   state.pages = _.range(1, len + 1)
 }
+
 onMounted(() => {
-  //初始化分页长度
-  initPages()
   //设置select的内容
   state.limit = size
+  //初始化分页长度
+  initPages()
   state.options = _.uniq(_.sortBy(_.concat(state.options, size)))
   state.optIndex = state.options.indexOf(size)
 })
+//emit
+// 顶层声明 emits，返回 emit 函数
+const emit = defineEmits<{
+  (e: 'changeCurrent', num: number): void
+}>()
+const chooseFav = (item: number, index: number) => {
+  const selected = state.options[index]
+  if (selected === undefined) return // 索引无效，直接退出
+  //当页面上的limit发送变化之后，调整current数值
+  if (state.optIndex !== index) {
+    // 保持当前页第一条数据在新分页中的页码
+    const startIndex = current * state.limit
+    const newCurrent = Math.floor(startIndex / selected)
+    emit('changeCurrent', newCurrent)
+  }
+  if (selected !== undefined) {
+    state.optIndex = index
+    state.limit = selected
+  }
+  initPages()
+}
+const changeIndex = (val: number) => {
+  console.log('current值：', val)
+  emit('changeCurrent', val)
+}
+// 首页
+const home = () => {
+  emit('changeCurrent', 0)
+}
+//尾页
+const end = () => {
+  emit('changeCurrent', state.pages.length - 1)
+}
+//上一页
+const prev = () => {
+  let cur = 0
+  if (current - 1 < 0) {
+    cur = 0
+  } else {
+    cur = current - 1
+  }
+  emit('changeCurrent', cur)
+}
+// 下一页
+const next = () => {
+  let cur = 0
+  if (current + 1 >= state.pages.length) {
+    cur = state.pages.length - 1
+  } else {
+    cur = current + 1
+  }
+  emit('changeCurrent', cur)
+}
 </script>
 
 <style lang="scss" scoped>
