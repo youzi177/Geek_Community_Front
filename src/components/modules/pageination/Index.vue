@@ -1,9 +1,10 @@
 <template>
   <div
+    class="d-flex"
     :class="{
-      'text-center': align === 'center',
-      'text-left': align === 'left',
-      'text-right': align === 'right',
+      'flex-center': align === 'center',
+      'flex-start': align === 'left',
+      'flex-end': align === 'right',
     }"
   >
     <div class="layui-box layui-laypage layui-laypage-default">
@@ -37,23 +38,74 @@
         <template v-else>尾页</template>
       </a>
     </div>
+    <div class="total" v-if="hasTotal">
+      到第 <input type="text" class="fluff-input" /> 页 共total 页
+    </div>
+    <div v-if="hasSelect">
+      <div
+        class="layui-unselect layui-form-select"
+        :class="{ 'layui-form-selected': isSelect }"
+        @click="
+          () => {
+            isSelect = !isSelect
+          }
+        "
+      >
+        <div class="layui-select-title">
+          <input
+            type="text"
+            placeholder="请选择"
+            readonly
+            v-model="options[optIndex]"
+            class="layui-input layui-unselect"
+          />
+          <i class="layui-edge"></i>
+        </div>
+        <dl class="layui-anim layui-anim-upbit">
+          <dd
+            v-for="(item, index) in options"
+            :key="index"
+            :class="{ 'layui-this': index === optIndex }"
+            @click="chooseFav(item, index)"
+          >
+            {{ item }}
+          </dd>
+        </dl>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { reactive, toRefs } from 'vue'
+
 interface Props {
-  align: string //显示位置
-  showType: string //显示图片还是文字
-  showEnd: boolean //是否显示尾页
-  theme: string
+  align?: string //显示位置
+  showType?: string //显示图片还是文字
+  showEnd?: boolean //是否显示尾页
+  theme?: string
+  hasTotal?: boolean //是否显示到第几页
+  hasSelect?: boolean //是否显示一页显示多少条
 }
 //3.5写法
 const {
   align = 'center',
-  showType = 'text',
-  showEnd = true,
+  showType = 'icon',
+  showEnd = false,
   theme = 'layui-bg-green',
+  hasTotal = false,
+  hasSelect = false,
 } = defineProps<Props>()
+
+const state = reactive({
+  optIndex: 0,
+  options: [10, 20, 30, 40, 50],
+  isSelect: false,
+})
+const { optIndex, options, isSelect } = toRefs(state)
+const chooseFav = (item: number, index: number) => {
+  state.optIndex = index
+}
 </script>
 
 <style lang="scss" scoped>
@@ -69,5 +121,27 @@ const {
 }
 .layui-bg-green {
   background-color: #009688;
+}
+.total {
+  color: rgba(51, 51, 51, 1);
+  margin-left: 20px;
+  position: relative;
+  top: -2px;
+}
+.fluff-input {
+  width: 30px;
+  padding: 0 5px;
+  height: 28px;
+  line-height: 28px;
+}
+.layui-input {
+  height: 30px;
+  line-height: 30px;
+}
+.layui-form-select {
+  width: 80px;
+  position: relative;
+  top: -2.5px;
+  margin-left: 10px;
 }
 </style>

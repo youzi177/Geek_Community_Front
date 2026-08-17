@@ -157,7 +157,7 @@
             <!-- <li class="fly-none">消灭零回复</li> -->
           </ul>
           <!-- 自定义分页组件 -->
-          <pageination :align="'center'"></pageination>
+          <pageination :has-select="true"></pageination>
           <div class="layui-form layui-form-pane">
             <Form @submit="submit" v-slot="{ errors }">
               <Editor @changeContent="add" :initContent="state1.content"></Editor>

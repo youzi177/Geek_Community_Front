@@ -79,4 +79,19 @@ import '@/assets/layui/css/modules/layer/default/layer.css'
   overflow: hidden;
   height: 0;
 }
+// 分页组件
+.d-flex {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  &.flex-start {
+    justify-content: flex-start;
+  }
+  &.flex-center {
+    justify-content: center;
+  }
+  &.flex-end {
+    justify-content: flex-end;
+  }
+}
 </style>
