@@ -93,7 +93,7 @@
             <a href="" class="layui-btn layui-btn-sm jie-admin">编辑</a>
             <a href="" class="layui-btn layui-btn-sm jie-admin jieda-admin-colllect">收藏</a>
           </div>
-          <div class="detail-body photos" v-html="page.content"></div>
+          <div class="detail-body photos" v-html="replaceContent"></div>
         </div>
         <!-- 回帖相关内容 -->
         <div class="fly-panel detail-box" id="flyReply">
@@ -204,7 +204,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, toRefs } from 'vue'
+import { computed, onMounted, reactive, toRefs } from 'vue'
 import Panel from '../Panel.vue'
 import Ads from '../sidebar/Ads.vue'
 import HotList from '../sidebar/HotList.vue'
@@ -217,6 +217,7 @@ import { getDetail } from '@/api/content.ts'
 import { getComments } from '@/api/comments.ts'
 import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
+import { escapeHtml } from '@/utils/escapeHtml.ts'
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
@@ -242,6 +243,12 @@ onMounted(() => {
 })
 const submit = () => {}
 const add = () => {}
+const replaceContent = computed(() => {
+  if (typeof page.value.content === 'undefined' || page.value.content.trim() === '') {
+    return ''
+  }
+  return escapeHtml(page.value.content)
+})
 //翻页事件
 const handleChange = (val: number) => {
   current.value = val
