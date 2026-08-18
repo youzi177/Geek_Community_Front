@@ -94,3 +94,15 @@ export interface Article {
   _id: string
   uid: UserInfoArt
 }
+
+//评论数据
+export interface Comments {
+  uid: UserInfoArt
+  content: string
+  isBest: string
+  isRead: string
+  hands: string
+  created: string
+  status: string
+  handed: string //是否点赞0：未点赞，1：已经点赞
+}

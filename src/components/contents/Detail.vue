@@ -102,23 +102,23 @@
           </fieldset>
 
           <ul class="jieda" id="jieda">
-            <li data-id="111" class="jieda-daan">
-              <a name="item-1111111111"></a>
+            <li class="jieda-daan" v-for="(item, index) in comments" :key="index">
               <div class="detail-about detail-about-reply">
                 <a class="fly-avatar" href="">
-                  <img
-                    src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-                    alt=" "
-                  />
+                  <img :src="item.uid ? item.uid.pic : '/img/default.png'" />
                 </a>
                 <div class="fly-detail-user">
                   <a href="" class="fly-link">
-                    <cite>贤心</cite>
-                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
-                    <i class="layui-badge fly-badge-vip">VIP3</i>
+                    <cite>{{ "item.uid ? item.uid.name : 'fluff'" }}</cite>
+                    <!-- <i class="iconfont icon-renzheng" title="认证信息：XXX"></i> -->
+                    <i
+                      class="layui-badge fly-badge-vip"
+                      v-if="item.uid && item.uid.isVip !== '0' ? item.uid.isVip : false"
+                      >VIP{{ item.uid.isVip }}</i
+                    >
                   </a>
 
-                  <span>(楼主)</span>
+                  <span v-if="index === 0">(楼主)</span>
                   <!--
                 <span style="color:#5FB878">(管理员)</span>
                 <span style="color:#FF9E3F">（社区之光）</span>
@@ -126,18 +126,17 @@
                 --></div>
 
                 <div class="detail-hits">
-                  <span>2017-11-30</span>
+                  <span>{{ formatDate(item.created) }}</span>
                 </div>
 
-                <i class="iconfont icon-caina" title="最佳答案"></i>
+                <!-- <i class="iconfont icon-caina" title="最佳答案"></i> -->
               </div>
-              <div class="detail-body jieda-body photos">
-                <p>香菇那个蓝瘦，这是一条被采纳的回帖</p>
-              </div>
+              <!-- 回帖内容 -->
+              <div class="detail-body jieda-body photos" v-html="item.content"></div>
               <div class="jieda-reply">
-                <span class="jieda-zan zanok" type="zan">
+                <span class="jieda-zan" :class="{ zanok: item.handed === '1' }" type="zan">
                   <i class="iconfont icon-zan"></i>
-                  <em>66</em>
+                  <em>{{ item.hands }}</em>
                 </span>
                 <span type="reply">
                   <i class="iconfont icon-svgmoban53"></i>
@@ -151,46 +150,8 @@
               </div>
             </li>
 
-            <li data-id="111">
-              <a name="item-1111111111"></a>
-              <div class="detail-about detail-about-reply">
-                <a class="fly-avatar" href="">
-                  <img
-                    src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-                    alt=" "
-                  />
-                </a>
-                <div class="fly-detail-user">
-                  <a href="" class="fly-link">
-                    <cite>贤心</cite>
-                  </a>
-                </div>
-                <div class="detail-hits">
-                  <span>2017-11-30</span>
-                </div>
-              </div>
-              <div class="detail-body jieda-body photos">
-                <p>蓝瘦那个香菇，这是一条没被采纳的回帖</p>
-              </div>
-              <div class="jieda-reply">
-                <span class="jieda-zan" type="zan">
-                  <i class="iconfont icon-zan"></i>
-                  <em>0</em>
-                </span>
-                <span type="reply">
-                  <i class="iconfont icon-svgmoban53"></i>
-                  回复
-                </span>
-                <div class="jieda-admin">
-                  <span type="edit">编辑</span>
-                  <span type="del">删除</span>
-                  <span class="jieda-accept" type="accept">采纳</span>
-                </div>
-              </div>
-            </li>
-
             <!-- 无数据时 -->
-            <!-- <li class="fly-none">消灭零回复</li> -->
+            <li class="fly-none" v-if="comments.length === 0">消灭零回复</li>
           </ul>
           <!-- 自定义分页组件 -->
           <pageination
@@ -200,6 +161,7 @@
             :current="current"
             :show-end="true"
             @change-current="handleChange"
+            v-if="comments.length >= 10"
           ></pageination>
           <div class="layui-form layui-form-pane">
             <Form @submit="submit" v-slot="{ errors }">
@@ -253,7 +215,7 @@ import Uselogin from '@/hooks/Uselogin'
 import { Field, Form } from 'vee-validate'
 import { getDetail } from '@/api/content.ts'
 import { getComments } from '@/api/comments.ts'
-import type { Article, HttpResponse } from '@/common/interface.ts'
+import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 //封装函数
 const { state, _getCode, setid } = Uselogin()
@@ -264,9 +226,9 @@ const state1 = reactive({
   size: 10,
   current: 0,
   page: {} as Article, //文章信息
-  comments: [], //评论列表
+  comments: [] as Comments[], //评论列表
 })
-const { content, total, size, current, page } = toRefs(state1)
+const { content, total, size, current, page, comments } = toRefs(state1)
 interface Props {
   tid: string //路由传参
 }
@@ -301,6 +263,7 @@ const getCommentsList = async () => {
   const { code, data } = result as HttpResponse
   if (code === 200) {
     console.log(data)
+    state1.comments = data
   }
 }
 </script>
@@ -318,5 +281,9 @@ const getCommentsList = async () => {
 }
 .jieda-body {
   margin: 25px 0 20px !important;
+}
+// 回帖-消灭0回复居中问题
+.layui-elem-field legend {
+  margin-left: 0;
 }
 </style>
