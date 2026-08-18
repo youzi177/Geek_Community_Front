@@ -70,19 +70,37 @@
           </div>
           <!-- 收藏、作者信息 -->
           <div class="detail-about">
-            <a class="fly-avatar" href="../user/home.html">
+            <router-link
+              :to="{ name: 'user', params: { uid: page.uid ? page.uid._id : '1' } }"
+              class="fly-avatar"
+            >
+              <img :src="page.uid ? page.uid.pic : '/img/default.png'" alt="贤心"
+            /></router-link>
+            <!-- <a class="fly-avatar" href="../user/home.html">
               <img :src="page.uid ? page.uid.pic : '/img/default.png'" alt="贤心" />
-            </a>
+            </a> -->
             <div class="fly-detail-user">
-              <a href="../user/home.html" class="fly-link">
+              <router-link
+                :to="{ name: 'user', params: { uid: page.uid ? page.uid._id : '1' } }"
+                class="fly-link"
+              >
                 <cite>{{ page.uid ? page.uid.name : 'fluff' }}</cite>
-                <!-- <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i> -->
+                <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
                 <i
                   class="layui-badge fly-badge-vip mr1"
                   v-if="page.uid && page.uid.isVip !== '0' ? page.uid.isVip : false"
                   >VIP{{ page.uid.isVip }}</i
                 >
-              </a>
+              </router-link>
+              <!-- <a href="../user/home.html" class="fly-link">
+                <cite>{{ page.uid ? page.uid.name : 'fluff' }}</cite>
+                <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
+                <i
+                  class="layui-badge fly-badge-vip mr1"
+                  v-if="page.uid && page.uid.isVip !== '0' ? page.uid.isVip : false"
+                  >VIP{{ page.uid.isVip }}</i
+                >
+              </a> -->
               <span>{{ formatDate(page.created) }}</span>
             </div>
             <div class="detail-hits">
@@ -105,7 +123,7 @@
             <li class="jieda-daan" v-for="(item, index) in comments" :key="index">
               <div class="detail-about detail-about-reply">
                 <router-link
-                  :to="{ name: 'user', params: { uid: item.cuid._id } }"
+                  :to="{ name: 'user', params: { uid: item.cuid ? item.cuid._id : '1' } }"
                   class="fly-avatar"
                 >
                   <img :src="item.cuid ? item.cuid.pic : '/img/default.png'" />
@@ -115,7 +133,7 @@
                 </a> -->
                 <div class="fly-detail-user">
                   <router-link
-                    :to="{ name: 'user', params: { uid: item.cuid._id } }"
+                    :to="{ name: 'user', params: { uid: item.cuid ? item.cuid._id : '1' } }"
                     class="fly-link"
                   >
                     <cite>{{ item.cuid ? item.cuid.name : 'fluff' }}</cite>
@@ -258,6 +276,7 @@ onMounted(() => {
   _getCode()
   getPostDetail()
   getCommentsList()
+  console.log(state1.page)
 })
 const submit = () => {}
 const add = () => {}
@@ -277,7 +296,7 @@ const getPostDetail = async () => {
   //明确告知result就是HttpResponse类型
   const { code, data } = result as HttpResponse
   if (code === 200) {
-    console.log(data)
+    // console.log(data)
     state1.page = data
   }
 }
@@ -287,7 +306,7 @@ const getCommentsList = async () => {
   //明确告知result就是HttpResponse类型
   const { code, data } = result as HttpResponse
   if (code === 200) {
-    console.log(data)
+    // console.log(data)
     state1.comments = data
   }
 }
