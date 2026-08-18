@@ -97,6 +97,7 @@ export interface Article {
 
 //评论数据
 export interface Comments {
+  cuid: UserInfoArt
   uid: UserInfoArt
   content: string
   isBest: string

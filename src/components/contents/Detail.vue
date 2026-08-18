@@ -105,16 +105,16 @@
             <li class="jieda-daan" v-for="(item, index) in comments" :key="index">
               <div class="detail-about detail-about-reply">
                 <a class="fly-avatar" href="">
-                  <img :src="item.uid ? item.uid.pic : '/img/default.png'" />
+                  <img :src="item.cuid ? item.cuid.pic : '/img/default.png'" />
                 </a>
                 <div class="fly-detail-user">
                   <a href="" class="fly-link">
-                    <cite>{{ "item.uid ? item.uid.name : 'fluff'" }}</cite>
+                    <cite>{{ item.cuid ? item.cuid.name : 'fluff' }}</cite>
                     <!-- <i class="iconfont icon-renzheng" title="认证信息：XXX"></i> -->
                     <i
                       class="layui-badge fly-badge-vip"
-                      v-if="item.uid && item.uid.isVip !== '0' ? item.uid.isVip : false"
-                      >VIP{{ item.uid.isVip }}</i
+                      v-if="item.cuid && item.cuid.isVip !== '0' ? item.cuid.isVip : false"
+                      >VIP{{ item.cuid.isVip }}</i
                     >
                   </a>
 
