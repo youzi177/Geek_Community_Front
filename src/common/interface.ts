@@ -66,6 +66,7 @@ export interface HttpResponse {
   favs?: number
   count?: number
   lastSign?: Date
+  total: number
 }
 //文章列表定义数据类型
 interface Tag {
@@ -106,4 +107,11 @@ export interface Comments {
   created: string
   status: string
   handed: string //是否点赞0：未点赞，1：已经点赞
+}
+//添加评论数据
+export interface Commentinfo {
+  content: string
+  code: string
+  sid: string
+  tid: string
 }

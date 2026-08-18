@@ -197,11 +197,10 @@
             :current="current"
             :show-end="true"
             @change-current="handleChange"
-            v-if="comments.length >= 10"
           ></pageination>
           <div class="layui-form layui-form-pane">
             <Form @submit="submit" v-slot="{ errors }">
-              <Editor @changeContent="add" :initContent="content"></Editor>
+              <Editor @changeContent="addCommentContent" :initContent="editInfo.content"></Editor>
               <div class="layui-form-item">
                 <label for="L_vercode" class="layui-form-label">验证码</label>
                 <div class="layui-input-inline">
@@ -248,24 +247,33 @@ import Links from '../sidebar/Links.vue'
 import Editor from '@/components/modules/editor/Index.vue'
 import pageination from '@/components/modules/pageination/Index.vue'
 import Uselogin from '@/hooks/Uselogin'
-import { Field, Form } from 'vee-validate'
+import { Field, Form, type SubmissionContext } from 'vee-validate'
 import { getDetail } from '@/api/content.ts'
-import { getComments } from '@/api/comments.ts'
+import { addComment, getComments } from '@/api/comments.ts'
 import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
+import { popup } from '../modules/pop/index.tsx'
+import { useAuthStore } from '@/stores/index.ts'
+const AuthStore = useAuthStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
 const state1 = reactive({
-  content: '',
-  total: 10,
+  // content: '',
+  total: 0,
   size: 10,
   current: 0,
   page: {} as Article, //文章信息
   comments: [] as Comments[], //评论列表
+  editInfo: {
+    content: '',
+    code: '',
+    sid: '',
+    tid: '',
+  }, //评论内容
 })
-const { content, total, size, current, page, comments } = toRefs(state1)
+const { total, size, current, page, comments, editInfo } = toRefs(state1)
 interface Props {
   tid: string //路由传参
 }
@@ -278,8 +286,32 @@ onMounted(() => {
   getCommentsList()
   console.log(state1.page)
 })
-const submit = () => {}
-const add = () => {}
+const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
+  const { setErrors } = actions
+  //用户没有登录
+  const isLogin = AuthStore.isLogin
+  if (!isLogin) {
+    popup('shake', '请先登录')
+    return
+  }
+  state1.editInfo.code = state.code
+  state1.editInfo.sid = AuthStore.sid
+  state1.editInfo.tid = tid
+  // 添加评论
+  const result = await addComment(state1.editInfo)
+  const { code, msg } = result as HttpResponse
+  if (code === 200) {
+    popup('发表评论成功', '')
+  } else if (code === 401) {
+    setErrors({
+      code: msg,
+    })
+  }
+}
+// 添加评论内容
+const addCommentContent = (val: string) => {
+  state1.editInfo.content = val
+}
 const replaceContent = computed(() => {
   if (typeof page.value.content === 'undefined' || page.value.content.trim() === '') {
     return ''
@@ -304,10 +336,11 @@ const getPostDetail = async () => {
 const getCommentsList = async () => {
   const result = await getComments(tid)
   //明确告知result就是HttpResponse类型
-  const { code, data } = result as HttpResponse
+  const { code, data, total } = result as HttpResponse
   if (code === 200) {
     // console.log(data)
     state1.comments = data
+    state1.total = total
   }
 }
 </script>

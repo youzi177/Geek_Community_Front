@@ -104,7 +104,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, toRefs } from 'vue'
+import { onMounted, reactive, toRefs, watch } from 'vue'
 import _ from 'lodash'
 interface Props {
   align?: string //显示位置
@@ -153,6 +153,14 @@ onMounted(() => {
   state.options = _.uniq(_.sortBy(_.concat(state.options, size)))
   state.optIndex = state.options.indexOf(size)
 })
+// 监听total变化
+watch(
+  () => total,
+  () => {
+    //初始化分页长度
+    initPages()
+  },
+)
 //emit
 // 顶层声明 emits，返回 emit 函数
 const emit = defineEmits<{
