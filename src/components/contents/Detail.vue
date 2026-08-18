@@ -104,11 +104,20 @@
           <ul class="jieda" id="jieda">
             <li class="jieda-daan" v-for="(item, index) in comments" :key="index">
               <div class="detail-about detail-about-reply">
-                <a class="fly-avatar" href="">
+                <router-link
+                  :to="{ name: 'user', params: { uid: item.cuid._id } }"
+                  class="fly-avatar"
+                >
                   <img :src="item.cuid ? item.cuid.pic : '/img/default.png'" />
-                </a>
+                </router-link>
+                <!-- <a class="fly-avatar" href="">
+                  <img :src="item.cuid ? item.cuid.pic : '/img/default.png'" />
+                </a> -->
                 <div class="fly-detail-user">
-                  <a href="" class="fly-link">
+                  <router-link
+                    :to="{ name: 'user', params: { uid: item.cuid._id } }"
+                    class="fly-link"
+                  >
                     <cite>{{ item.cuid ? item.cuid.name : 'fluff' }}</cite>
                     <!-- <i class="iconfont icon-renzheng" title="认证信息：XXX"></i> -->
                     <i
@@ -116,7 +125,16 @@
                       v-if="item.cuid && item.cuid.isVip !== '0' ? item.cuid.isVip : false"
                       >VIP{{ item.cuid.isVip }}</i
                     >
-                  </a>
+                  </router-link>
+                  <!-- <a href="JavaScript:;" class="fly-link">
+                    <cite>{{ item.cuid ? item.cuid.name : 'fluff' }}</cite>
+                    <i class="iconfont icon-renzheng" title="认证信息：XXX"></i>
+                    <i
+                      class="layui-badge fly-badge-vip"
+                      v-if="item.cuid && item.cuid.isVip !== '0' ? item.cuid.isVip : false"
+                      >VIP{{ item.cuid.isVip }}</i
+                    >
+                  </a> -->
 
                   <span v-if="index === 0">(楼主)</span>
                   <!--
