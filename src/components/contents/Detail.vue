@@ -4,60 +4,96 @@
     <div class="layui-row layui-col-space15">
       <div class="layui-col-md8 content detail">
         <div class="fly-panel detail-box">
-          <h1>geek极客社区，基于 layui 的极简社区页面模版</h1>
+          <h1>{{ page.title }}</h1>
           <div class="fly-detail-info">
             <!-- <span class="layui-badge">审核中</span> -->
-            <span class="layui-badge layui-bg-green fly-detail-column">动态</span>
+            <span class="layui-badge layui-bg-green fly-detail-column" v-if="page.catalog === 'log'"
+              >动态</span
+            >
+            <span
+              class="layui-badge layui-bg-green fly-detail-column"
+              v-else-if="page.catalog === 'share'"
+              >分享</span
+            >
+            <span
+              class="layui-badge layui-bg-green fly-detail-column"
+              v-else-if="page.catalog === 'advise'"
+              >建议</span
+            >
+            <span
+              class="layui-badge layui-bg-green fly-detail-column"
+              v-else-if="page.catalog === 'ask'"
+              >提问</span
+            >
+            <span
+              class="layui-badge layui-bg-green fly-detail-column"
+              v-else-if="page.catalog === 'discuss'"
+              >交流</span
+            >
+            <span
+              class="layui-badge layui-bg-green fly-detail-column"
+              v-else-if="page.catalog === 'notice'"
+              >公告</span
+            >
 
-            <span class="layui-badge" style="background-color: #999">未结</span>
-            <!-- <span class="layui-badge" style="background-color: #5FB878;">已结</span> -->
+            <span class="layui-badge" style="background-color: #999" v-if="page.isEnd === '0'"
+              >未结</span
+            >
+            <span class="layui-badge" style="background-color: #5fb878" v-else>已结</span>
 
-            <span class="layui-badge layui-bg-black">置顶</span>
-            <span class="layui-badge layui-bg-red">精帖</span>
-
-            <div class="fly-admin-box" data-id="123">
+            <span class="layui-badge layui-bg-black" v-show="page.isTop === '1'">置顶</span>
+            <span
+              class="layui-badge layui-bg-red"
+              v-for="(tag, index) in page.tags"
+              :key="index"
+              :class="tag.class"
+              >{{ tag.name }}</span
+            >
+            <!-- admin -->
+            <!-- <div class="fly-admin-box" data-id="123">
               <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
 
               <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1"
                 >置顶</span
               >
-              <!-- <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span> -->
+              <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="0" style="background-color:#ccc;">取消置顶</span>
 
               <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="1"
                 >加精</span
               >
-              <!-- <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span> -->
-            </div>
+              <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span>
+            </div> -->
             <span class="fly-list-nums">
-              <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> 66</a>
-              <i class="iconfont" title="人气">&#xe60b;</i> 99999
+              <a href="#comment"><i class="iconfont" title="回答">&#xe60c;</i> {{ page.answer }}</a>
+              <i class="iconfont" title="人气">&#xe60b;</i> {{ page.reads }}
             </span>
           </div>
           <!-- 收藏、作者信息 -->
           <div class="detail-about">
             <a class="fly-avatar" href="../user/home.html">
-              <img
-                src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg"
-                alt="贤心"
-              />
+              <img :src="page.uid ? page.uid.pic : '/img/default.png'" alt="贤心" />
             </a>
             <div class="fly-detail-user">
               <a href="../user/home.html" class="fly-link">
-                <cite>贤心</cite>
-                <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
-                <i class="layui-badge fly-badge-vip">VIP3</i>
+                <cite>{{ page.uid ? page.uid.name : 'fluff' }}</cite>
+                <!-- <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i> -->
+                <i
+                  class="layui-badge fly-badge-vip mr1"
+                  v-if="page.uid && page.uid.isVip !== '0' ? page.uid.isVip : false"
+                  >VIP{{ page.uid.isVip }}</i
+                >
               </a>
-              <span>2017-11-30</span>
+              <span>{{ formatDate(page.created) }}</span>
             </div>
-            <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
-              <span style="padding-right: 10px; color: #ff7200">悬赏：60积分</span>
+            <div class="detail-hits">
+              <span style="padding-right: 10px; color: #ff7200">悬赏：{{ page.fav }}积分</span>
             </div>
           </div>
           <div class="layui-btn-container fly-detail-admin pt-1">
             <a href="" class="layui-btn layui-btn-sm jie-admin">编辑</a>
             <a href="" class="layui-btn layui-btn-sm jie-admin jieda-admin-colllect">收藏</a>
           </div>
-          <div class="detail-body photos">这是贴子内容</div>
+          <div class="detail-body photos" v-html="page.content"></div>
         </div>
         <!-- 回帖相关内容 -->
         <div class="fly-panel detail-box" id="flyReply">
@@ -217,7 +253,8 @@ import Uselogin from '@/hooks/Uselogin'
 import { Field, Form } from 'vee-validate'
 import { getDetail } from '@/api/content.ts'
 import { getComments } from '@/api/comments.ts'
-import type { HttpResponse } from '@/common/interface.ts'
+import type { Article, HttpResponse } from '@/common/interface.ts'
+import { formatDate } from '@/utils/formatDate.ts'
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
@@ -226,10 +263,10 @@ const state1 = reactive({
   total: 10,
   size: 10,
   current: 0,
-  page: {}, //文章信息
+  page: {} as Article, //文章信息
   comments: [], //评论列表
 })
-const { content, total, size, current } = toRefs(state1)
+const { content, total, size, current, page } = toRefs(state1)
 interface Props {
   tid: string //路由传参
 }
@@ -254,6 +291,7 @@ const getPostDetail = async () => {
   const { code, data } = result as HttpResponse
   if (code === 200) {
     console.log(data)
+    state1.page = data
   }
 }
 //获取文章评论数据
@@ -277,5 +315,8 @@ const getCommentsList = async () => {
   span {
     margin-right: 5px;
   }
+}
+.jieda-body {
+  margin: 25px 0 20px !important;
 }
 </style>
