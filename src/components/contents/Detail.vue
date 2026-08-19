@@ -168,7 +168,7 @@
                 <!-- <i class="iconfont icon-caina" title="最佳答案"></i> -->
               </div>
               <!-- 回帖内容 -->
-              <div class="detail-body jieda-body photos" v-html="item.content"></div>
+              <div class="detail-body jieda-body photos" v-richtext="item.content"></div>
               <div class="jieda-reply">
                 <span class="jieda-zan" :class="{ zanok: item.handed === '1' }" type="zan">
                   <i class="iconfont icon-zan"></i>
@@ -192,11 +192,13 @@
           <!-- 自定义分页组件 -->
           <pageination
             :has-select="true"
+            :hasTotal="true"
             :total="total"
             :size="size"
             :current="current"
             :show-end="true"
             @change-current="handleChange"
+            @changeLimit="handleLimit"
           ></pageination>
           <div class="layui-form layui-form-pane">
             <Form @submit="submit" v-slot="{ errors }">
@@ -254,8 +256,9 @@ import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
 import { popup } from '../modules/pop/index.tsx'
-import { useAuthStore } from '@/stores/index.ts'
+import { useAuthStore, useUserStore } from '@/stores/index.ts'
 const AuthStore = useAuthStore()
+const UserStore = useUserStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
@@ -299,9 +302,24 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
   state1.editInfo.tid = tid
   // 添加评论
   const result = await addComment(state1.editInfo)
-  const { code, msg } = result as HttpResponse
+  const { code, msg, data } = result as HttpResponse
   if (code === 200) {
     popup('发表评论成功', '')
+    const user = UserStore.userInfo
+    const cuid = {
+      _id: user._id,
+      pic: user.pic,
+      name: user.name,
+      isVip: user.isVip,
+    }
+    data.cuid = cuid
+    state1.comments.push(data) //添加新的评论到评论列表
+    // 清空内容
+    state.code = ''
+    state1.editInfo.content = ''
+    actions.resetForm() //清除错误信息
+    //刷新图片验证码
+    _getCode()
   } else if (code === 401) {
     setErrors({
       code: msg,
@@ -312,15 +330,27 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
 const addCommentContent = (val: string) => {
   state1.editInfo.content = val
 }
+// 文章详情的转义
 const replaceContent = computed(() => {
   if (typeof page.value.content === 'undefined' || page.value.content.trim() === '') {
     return ''
   }
   return escapeHtml(page.value.content)
 })
+
 //翻页事件
 const handleChange = (val: number) => {
+  console.log('handleChange')
+
   current.value = val
+  getCommentsList()
+}
+const handleLimit = (limit: number, newCurrent?: number) => {
+  size.value = limit
+  if (newCurrent !== undefined) {
+    current.value = newCurrent
+  }
+  getCommentsList()
 }
 //获取文章详情
 const getPostDetail = async () => {
@@ -334,7 +364,11 @@ const getPostDetail = async () => {
 }
 //获取文章评论数据
 const getCommentsList = async () => {
-  const result = await getComments(tid)
+  const result = await getComments({
+    tid: tid,
+    page: state1.current,
+    limit: state1.size,
+  })
   //明确告知result就是HttpResponse类型
   const { code, data, total } = result as HttpResponse
   if (code === 200) {

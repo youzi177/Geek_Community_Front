@@ -30,7 +30,8 @@ const escapeHtml = (val: string = ''): string => {
   let result = val
 
   // ========== 表情替换 ==========
-  const face = /\sface\[\W{1,}]/g
+  // const face = /\sface\[\W{1,}]/g
+  const face = /\sface\[\S+\]/g
   // 原代码使用 face.test 后再次 match，存在 lastIndex 状态问题；
   // 改为直接 match 并判断结果是否存在，避免重复匹配导致的问题
   const faceGroup = result.match(face)

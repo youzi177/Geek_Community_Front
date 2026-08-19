@@ -110,8 +110,10 @@ export interface Comments {
 }
 //添加评论数据
 export interface Commentinfo {
-  content: string
-  code: string
-  sid: string
+  content?: string
+  code?: string
+  sid?: string
   tid: string
+  page?: number
+  limit?: number
 }

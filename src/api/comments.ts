@@ -1,9 +1,10 @@
 import type { Commentinfo } from '@/common/interface'
 import axios from '@/common/request'
+import qs from 'qs'
 
 //获取文章评论数据
-const getComments = (tid: string) => {
-  return axios.get('/public/comments?tid=' + tid)
+const getComments = (param: Commentinfo) => {
+  return axios.get('/public/comments?' + qs.stringify(param))
 }
 //添加评论
 const addComment = (data: Commentinfo) => {

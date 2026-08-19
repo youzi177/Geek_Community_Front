@@ -66,7 +66,7 @@
       </a>
     </div>
     <div class="total" v-if="hasTotal">
-      到第 <input type="text" class="fluff-input" /> 页 共total 页
+      到第 <input type="text" class="fluff-input" @keyup.enter="jumpTo" /> 页 共{{ totalPages }} 页
     </div>
     <div v-if="hasSelect">
       <div
@@ -104,8 +104,9 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, toRefs, watch } from 'vue'
+import { computed, onMounted, reactive, toRefs, watch } from 'vue'
 import _ from 'lodash'
+import { popup } from '../pop'
 interface Props {
   align?: string //显示位置
   showType?: string //显示图片还是文字
@@ -139,6 +140,28 @@ const state = reactive({
 })
 const { optIndex, options, isSelect, pages } = toRefs(state)
 
+const totalPages = computed(() => {
+  return Math.ceil(total / state.limit)
+})
+// 跳转页数
+const jumpTo = (event: Event) => {
+  // const result = event.target.value
+  const input = event.target as HTMLInputElement
+  const result = Number(input.value)
+  console.log(result)
+  console.log(!Number.isNaN(result))
+
+  let cur = current
+  if (result > totalPages.value || result <= 0 || Number.isNaN(result)) {
+    popup('请输入正确的页码', 'shake')
+    return
+  } else {
+    cur = result - 1
+  }
+  if (cur !== current) {
+    emit('changeCurrent', cur)
+  }
+}
 const initPages = () => {
   const len = Math.ceil(total / state.limit)
   //5->[1,2,3,4,5]
@@ -161,10 +184,12 @@ watch(
     initPages()
   },
 )
+
 //emit
 // 顶层声明 emits，返回 emit 函数
 const emit = defineEmits<{
   (e: 'changeCurrent', num: number): void
+  (e: 'changeLimit', selected: number, newCurrent: number): void
 }>()
 const chooseFav = (item: number, index: number) => {
   const selected = state.options[index]
@@ -174,7 +199,10 @@ const chooseFav = (item: number, index: number) => {
     // 保持当前页第一条数据在新分页中的页码
     const startIndex = current * state.limit
     const newCurrent = Math.floor(startIndex / selected)
-    emit('changeCurrent', newCurrent)
+    // emit('changeCurrent', newCurrent)
+    // emit('changeLimit', selected)
+    // 只触发 changeLimit，并将新页码作为第二参数
+    emit('changeLimit', selected, newCurrent)
   }
   if (selected !== undefined) {
     state.optIndex = index
@@ -184,15 +212,21 @@ const chooseFav = (item: number, index: number) => {
 }
 const changeIndex = (val: number) => {
   console.log('current值：', val)
-  emit('changeCurrent', val)
+  if (val !== current) {
+    emit('changeCurrent', val)
+  }
 }
 // 首页
 const home = () => {
-  emit('changeCurrent', 0)
+  if (current > 0) {
+    emit('changeCurrent', 0)
+  }
 }
 //尾页
 const end = () => {
-  emit('changeCurrent', state.pages.length - 1)
+  if (pages.value.length - 1 > current) {
+    emit('changeCurrent', state.pages.length - 1)
+  }
 }
 //上一页
 const prev = () => {
@@ -201,8 +235,8 @@ const prev = () => {
     cur = 0
   } else {
     cur = current - 1
+    emit('changeCurrent', cur)
   }
-  emit('changeCurrent', cur)
 }
 // 下一页
 const next = () => {
@@ -211,8 +245,8 @@ const next = () => {
     cur = state.pages.length - 1
   } else {
     cur = current + 1
+    emit('changeCurrent', cur)
   }
-  emit('changeCurrent', cur)
 }
 </script>
 
