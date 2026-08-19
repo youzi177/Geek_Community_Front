@@ -165,7 +165,7 @@
                   <span>{{ formatDate(item.created) }}</span>
                 </div>
 
-                <!-- <i class="iconfont icon-caina" title="最佳答案"></i> -->
+                <i class="iconfont icon-caina" title="最佳答案" v-show="item.isBest === '1'"></i>
               </div>
               <!-- 回帖内容 -->
               <div class="detail-body jieda-body photos" v-richtext="item.content"></div>
@@ -179,9 +179,20 @@
                   回复
                 </span>
                 <div class="jieda-admin">
-                  <span type="edit">编辑</span>
-                  <span type="del">删除</span>
-                  <!-- <span class="jieda-accept" type="accept">采纳</span> -->
+                  <span
+                    type="edit"
+                    @click="editComent(item)"
+                    v-show="page.isEnd === '0' && item.cuid._id === user._id && user.status === '0'"
+                    >编辑</span
+                  >
+                  <!-- <span type="del">删除</span> -->
+                  <span
+                    class="jieda-accept"
+                    type="accept"
+                    @click="setBest(item, index)"
+                    v-show="page.isEnd === '0' && page.uid._id === user._id && user.status === '0'"
+                    >采纳</span
+                  >
                 </div>
               </div>
             </li>
@@ -257,6 +268,8 @@ import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
 import { popup } from '../modules/pop/index.tsx'
 import { useAuthStore, useUserStore } from '@/stores/index.ts'
+import { myconfirm } from '../modules/alert/index.tsx'
+import { scrollToElem } from '@/utils/common.ts'
 const AuthStore = useAuthStore()
 const UserStore = useUserStore()
 //封装函数
@@ -337,7 +350,10 @@ const replaceContent = computed(() => {
   }
   return escapeHtml(page.value.content)
 })
-
+//判断当前登录用户
+const user = computed(() => {
+  return UserStore.userInfo
+})
 //翻页事件
 const handleChange = (val: number) => {
   console.log('handleChange')
@@ -351,6 +367,27 @@ const handleLimit = (limit: number, newCurrent?: number) => {
     current.value = newCurrent
   }
   getCommentsList()
+}
+// 编辑
+const editComent = (item: Comments) => {
+  console.log('🚀 ~ editComent ~ item:', item)
+  scrollToElem('.layui_input-block', 500, -65) //滚动
+  state1.editInfo.content = item.content
+  document.getElementById('edit')?.focus()
+}
+
+// 采纳
+const setBest = (item: Comments, index: number) => {
+  console.log('🚀 ~ setBest ~ index:', index)
+  console.log('🚀 ~ setBest ~ item:', item)
+  myconfirm(
+    '确定采纳为最佳答案吗？',
+    () => {
+      //发送采纳最佳答案的请求
+      console.log(item._id)
+    },
+    () => {},
+  )
 }
 //获取文章详情
 const getPostDetail = async () => {

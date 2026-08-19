@@ -107,6 +107,7 @@ export interface Comments {
   created: string
   status: string
   handed: string //是否点赞0：未点赞，1：已经点赞
+  _id: string
 }
 //添加评论数据
 export interface Commentinfo {

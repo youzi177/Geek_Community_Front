@@ -29,6 +29,7 @@
           </span>
         </div>
         <textarea
+          id="edit"
           class="layui-textarea fly-editor"
           name="content"
           ref="textEdit"

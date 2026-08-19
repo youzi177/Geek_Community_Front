@@ -12,6 +12,7 @@ interface UserInfo {
   gender: string
   regmark: string
   _id: string
+  status: string
 }
 export const useUserStore = defineStore('user', {
   state() {
@@ -29,6 +30,11 @@ export const useUserStore = defineStore('user', {
         ...value,
       }
       localStorage.setItem('userInfo', JSON.stringify(this.userInfo)) //localStorage存用户信息
+    },
+    // 清除用户信息（重置为空对象）
+    clearUserInfo() {
+      this.userInfo = {} as UserInfo
+      localStorage.removeItem('userInfo')
     },
   },
 })

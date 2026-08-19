@@ -132,15 +132,8 @@ const logout = () => {
     () => {
       //清除状态
       localStorage.clear()
-      UserStore.setUserInfo({
-        name: '',
-        pic: '',
-        isVip: '',
-        count: 0,
-        favs: 0,
-        isSign: false,
-        lastSign: null,
-      })
+      // 清空 Pinia 中的用户信息
+      UserStore.clearUserInfo()
       AuthStore.setisLogin(false)
       AuthStore.setToken('')
       //跳转到首页
