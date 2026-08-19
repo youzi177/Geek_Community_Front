@@ -119,3 +119,8 @@ export interface Commentinfo {
   limit?: number
   cid?: string
 }
+//采纳
+export interface CommentBestinfo {
+  cid: string
+  tid: string
+}

@@ -262,13 +262,13 @@ import pageination from '@/components/modules/pageination/Index.vue'
 import Uselogin from '@/hooks/Uselogin'
 import { Field, Form, type SubmissionContext } from 'vee-validate'
 import { getDetail } from '@/api/content.ts'
-import { addComment, getComments, updateComment } from '@/api/comments.ts'
+import { addComment, getComments, setCommentBest, updateComment } from '@/api/comments.ts'
 import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
 import { popup } from '../modules/pop/index.tsx'
 import { useAuthStore, useUserStore } from '@/stores/index.ts'
-import { myconfirm } from '../modules/alert/index.tsx'
+import { myalert, myconfirm } from '../modules/alert/index.tsx'
 import { scrollToElem } from '@/utils/common.ts'
 const AuthStore = useAuthStore()
 const UserStore = useUserStore()
@@ -378,6 +378,8 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
     setErrors({
       code: msg,
     })
+  } else {
+    myalert(msg as string)
   }
 }
 // 添加评论内容
@@ -425,9 +427,19 @@ const setBest = (item: Comments, index: number) => {
   console.log('🚀 ~ setBest ~ item:', item)
   myconfirm(
     '确定采纳为最佳答案吗？',
-    () => {
+    async () => {
       //发送采纳最佳答案的请求
-      console.log(item._id)
+      console.log(item)
+      const result = await setCommentBest({
+        cid: item._id,
+        tid: tid,
+      })
+      const { code } = result as HttpResponse
+      if (code === 200) {
+        popup('采纳成功!', '')
+        item.isBest = '1'
+        state1.page.isEnd = '1'
+      }
     },
     () => {},
   )

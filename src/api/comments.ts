@@ -1,4 +1,4 @@
-import type { Commentinfo } from '@/common/interface'
+import type { CommentBestinfo, Commentinfo } from '@/common/interface'
 import axios from '@/common/request'
 import qs from 'qs'
 
@@ -14,4 +14,8 @@ const addComment = (data: Commentinfo) => {
 const updateComment = (data: Commentinfo) => {
   return axios.post('/comments/update', { ...data })
 }
-export { getComments, addComment, updateComment }
+//采纳最佳答案
+const setCommentBest = (param: CommentBestinfo) => {
+  return axios.get('/comments/accept?' + qs.stringify(param))
+}
+export { getComments, addComment, updateComment, setCommentBest }
