@@ -117,4 +117,5 @@ export interface Commentinfo {
   tid: string
   page?: number
   limit?: number
+  cid?: string
 }

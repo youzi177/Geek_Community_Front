@@ -262,7 +262,7 @@ import pageination from '@/components/modules/pageination/Index.vue'
 import Uselogin from '@/hooks/Uselogin'
 import { Field, Form, type SubmissionContext } from 'vee-validate'
 import { getDetail } from '@/api/content.ts'
-import { addComment, getComments } from '@/api/comments.ts'
+import { addComment, getComments, updateComment } from '@/api/comments.ts'
 import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
@@ -287,6 +287,8 @@ const state1 = reactive({
     code: '',
     sid: '',
     tid: '',
+    cid: '', //评论用户的id
+    item: {} as Comments,
   }, //评论内容
 })
 const { total, size, current, page, comments, editInfo } = toRefs(state1)
@@ -310,21 +312,60 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
     popup('shake', '请先登录')
     return
   }
+  const user = UserStore.userInfo
+  const cuid = {
+    _id: user._id,
+    pic: user.pic,
+    name: user.name,
+    isVip: user.isVip,
+  }
+  // 用户是否禁言
+  if (user.status !== '0') {
+    popup('用户已经被禁言，请联系管理员', 'shake')
+    return
+  }
   state1.editInfo.code = state.code
   state1.editInfo.sid = AuthStore.sid
   state1.editInfo.tid = tid
+
+  //更新评论
+  if (typeof state1.editInfo.cid !== 'undefined' && state1.editInfo.cid !== '') {
+    // 解构，排除 item
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { item, ...submitData } = state1.editInfo
+    // 判断用户是否修改了内容
+    if (state1.editInfo.content === state1.editInfo.item.content) {
+      popup('确定编辑了内容~~~', 'shake')
+      return
+    }
+
+    const result = await updateComment(submitData)
+    const { code, msg } = result as HttpResponse
+    if (code === 200) {
+      const temp = state1.editInfo.item
+      temp.content = state1.editInfo.content
+      popup('更新评论成功', '')
+      state1.comments.splice(state1.comments.indexOf(state1.editInfo.item), 1, temp) //编辑的评论添加到评论列表
+      // 清空内容
+      state.code = ''
+      state1.editInfo.content = ''
+      state1.editInfo.cid = ''
+      actions.resetForm() //清除错误信息
+      //刷新图片验证码
+      _getCode()
+      return
+    } else if (code === 401) {
+      setErrors({
+        code: msg,
+      })
+      return
+    }
+  }
   // 添加评论
   const result = await addComment(state1.editInfo)
   const { code, msg, data } = result as HttpResponse
   if (code === 200) {
     popup('发表评论成功', '')
-    const user = UserStore.userInfo
-    const cuid = {
-      _id: user._id,
-      pic: user.pic,
-      name: user.name,
-      isVip: user.isVip,
-    }
     data.cuid = cuid
     state1.comments.push(data) //添加新的评论到评论列表
     // 清空内容
@@ -374,6 +415,8 @@ const editComent = (item: Comments) => {
   scrollToElem('.layui_input-block', 500, -65) //滚动
   state1.editInfo.content = item.content
   document.getElementById('edit')?.focus()
+  state1.editInfo.cid = item._id
+  state1.editInfo.item = item
 }
 
 // 采纳

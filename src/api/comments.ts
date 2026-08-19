@@ -10,4 +10,8 @@ const getComments = (param: Commentinfo) => {
 const addComment = (data: Commentinfo) => {
   return axios.post('/comments/reply', { ...data })
 }
-export { getComments, addComment }
+//更新评论
+const updateComment = (data: Commentinfo) => {
+  return axios.post('/comments/update', { ...data })
+}
+export { getComments, addComment, updateComment }
