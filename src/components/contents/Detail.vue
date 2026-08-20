@@ -179,7 +179,7 @@
                   <i class="iconfont icon-zan"></i>
                   <em>{{ item.hands }}</em>
                 </span>
-                <span type="reply">
+                <span type="reply" @click="reply(item)">
                   <i class="iconfont icon-svgmoban53"></i>
                   回复
                 </span>
@@ -466,6 +466,31 @@ const hands = async (item: Comments) => {
   } else {
     popup(msg as string, 'shake')
   }
+}
+const reply = (item: Comments) => {
+  console.log(item.cuid.name)
+
+  // console.log(item)
+  // 插入@符号到content
+  //滚动到页面的输入框
+  //focus输入框
+  // 更换@ 用户但是内容不变
+  const reg = /^@[\S]+/g
+  if (state1.editInfo.content) {
+    // 不为空的话就正则匹配一下
+    if (reg.test(state1.editInfo.content)) {
+      // 有内容有@符号了
+      state1.editInfo.content = state1.editInfo.content.replace(reg, '@' + item.cuid.name + ' ')
+    } else {
+      state1.editInfo.content = `@${item.cuid.name} ${state1.editInfo.content}`
+    }
+  } else {
+    // 评论框为空
+    state1.editInfo.content = '@' + item.cuid.name + ' '
+  }
+
+  scrollToElem('.layui_input-block', 500, -65) //滚动
+  document.getElementById('edit')?.focus()
 }
 //获取文章详情
 const getPostDetail = async () => {
