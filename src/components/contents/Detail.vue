@@ -116,7 +116,7 @@
         <!-- 回帖相关内容 -->
         <div class="fly-panel detail-box" id="flyReply">
           <fieldset class="layui-elem-field layui-field-title" style="text-align: center">
-            <legend>回帖</legend>
+            <legend id="comment">回帖</legend>
           </fieldset>
 
           <ul class="jieda" id="jieda">
