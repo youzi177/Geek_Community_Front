@@ -108,7 +108,13 @@
             </div>
           </div>
           <div class="layui-btn-container fly-detail-admin pt-1">
-            <a href="" class="layui-btn layui-btn-sm jie-admin">编辑</a>
+            <router-link
+              :to="{ name: 'edit', params: { tid: tid } }"
+              @click="setPage(page)"
+              class="layui-btn layui-btn-sm jie-admin"
+              v-show="page.isEnd === '0' && page.uid._id === user._id"
+              >编辑</router-link
+            >
             <a href="" class="layui-btn layui-btn-sm jie-admin jieda-admin-colllect">收藏</a>
           </div>
           <div class="detail-body photos" v-html="replaceContent"></div>
@@ -272,11 +278,12 @@ import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
 import { popup } from '../modules/pop/index.tsx'
-import { useAuthStore, useUserStore } from '@/stores/index.ts'
+import { useAppStore, useAuthStore, useUserStore } from '@/stores/index.ts'
 import { myalert, myconfirm } from '../modules/alert/index.tsx'
 import { scrollToElem } from '@/utils/common.ts'
 const AuthStore = useAuthStore()
 const UserStore = useUserStore()
+const AppStore = useAppStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
@@ -491,6 +498,10 @@ const reply = (item: Comments) => {
 
   scrollToElem('.layui_input-block', 500, -65) //滚动
   document.getElementById('edit')?.focus()
+}
+// 传递参数
+const setPage = (page: Article) => {
+  AppStore.setPage(page)
 }
 //获取文章详情
 const getPostDetail = async () => {

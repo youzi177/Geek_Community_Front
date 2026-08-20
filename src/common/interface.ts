@@ -47,11 +47,12 @@ export interface ResetInfo {
 }
 export interface PostData {
   title: string
-  catalog: string
+  catalog?: string
   content: string
-  fav: number
+  fav?: number
   code: string
   sid: string
+  tid?: string
 }
 
 //后端返回的数据格式

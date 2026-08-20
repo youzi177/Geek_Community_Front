@@ -24,6 +24,7 @@ const NoFound = () => import('@/pages/NoFound.vue')
 const Confirm = () => import('@/pages/Confirm.vue')
 const Reset = () => import('@/pages/Reset.vue')
 const Add = () => import('@/components/contents/Add.vue')
+const Edit = () => import('@/components/contents/Edit.vue')
 // 帖子详情组件
 const Detail = () => import('@/components/contents/Detail.vue')
 import { jwtDecode } from 'jwt-decode'
@@ -202,6 +203,14 @@ const router = createRouter({
       path: '/add',
       name: 'add',
       component: Add,
+      meta: { requiresAuth: true }, //路由元信息，需要登录才能进去的路由
+    },
+    // 编辑贴子
+    {
+      path: '/edit/:tid',
+      name: 'edit',
+      component: Edit,
+      props: true,
       meta: { requiresAuth: true }, //路由元信息，需要登录才能进去的路由
     },
     // 帖子详情

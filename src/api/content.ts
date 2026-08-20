@@ -45,9 +45,12 @@ const uploadImg = (formData: FormData) => {
 const addPost = (data: PostData) => {
   return axios.post('/content/add', { ...data })
 }
-//获取文字详情
+//获取文章详情
 const getDetail = (tid: string) => {
   return axios.get('/public/content/detail?tid=' + tid)
 }
-
-export { getList, getTips, getLinks, getTop, uploadImg, addPost, getDetail }
+//更新文章
+const UpdatePost = (data: PostData) => {
+  return axios.post('/content/update', { ...data })
+}
+export { getList, getTips, getLinks, getTop, uploadImg, addPost, getDetail, UpdatePost }

@@ -5,7 +5,7 @@
       <div class="layui-form layui-form-pane">
         <div class="layui-tab layui-tab-brief" lay-filter="user">
           <ul class="layui-tab-title">
-            <li class="layui-this">发表新帖<!-- 编辑帖子 --></li>
+            <li class="layui-this">编辑帖子<!-- 编辑帖子 --></li>
           </ul>
           <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0">
             <div class="layui-tab-item layui-show">
@@ -13,46 +13,22 @@
                 <div class="layui-row layui-col-space15 layui-form-item">
                   <div class="layui-col-md3">
                     <label class="layui-form-label">所在专栏</label>
-                    <div
-                      class="layui-input-block"
-                      @click="
-                        () => {
-                          isSelect = !isSelect
-                        }
-                      "
-                    >
+                    <div class="layui-input-block">
                       <!--isSelect是否显示下拉框  -->
-                      <div
-                        class="layui-unselect layui-form-select"
-                        :class="{ 'layui-form-selected': isSelect }"
-                      >
+                      <div class="layui-unselect layui-form-select">
                         <div class="layui-select-title">
                           <Field
                             type="text"
                             name="catalog"
-                            rules="is_not:请选择"
                             as="input"
                             placeholder="请选择"
                             readonly
                             v-model="selectedText"
-                            class="layui-input layui-unselect"
+                            class="layui-input layui-unselect layui-disabled"
                           />
                           <i class="layui-edge"></i>
                         </div>
-                        <dl class="layui-anim layui-anim-upbit">
-                          <dd
-                            v-for="(item, index) in catalogs"
-                            :key="index"
-                            :class="{ 'layui-this': index === cataIndex }"
-                            @click="chooseCatalog(item, index)"
-                          >
-                            {{ item.text }}
-                          </dd>
-                        </dl>
                       </div>
-                    </div>
-                    <div class="layui-row">
-                      <span style="color: #c00">{{ errors.catalog }}</span>
                     </div>
                   </div>
                   <div class="layui-col-md9">
@@ -79,29 +55,19 @@
                   <div class="layui-inline">
                     <label class="layui-form-label">悬赏飞吻</label>
 
-                    <div
-                      class="layui-input-block"
-                      @click="
-                        () => {
-                          isSelect_fav = !isSelect_fav
-                        }
-                      "
-                    >
-                      <div
-                        class="layui-unselect layui-form-select"
-                        :class="{ 'layui-form-selected': isSelect_fav }"
-                      >
+                    <div class="layui-input-block">
+                      <div class="layui-unselect layui-form-select">
                         <div class="layui-select-title">
                           <input
                             type="text"
                             placeholder="请选择"
                             readonly
                             v-model="favList[favIndex]"
-                            class="layui-input layui-unselect"
+                            class="layui-input layui-unselect layui-disabled"
                           />
                           <i class="layui-edge"></i>
                         </div>
-                        <dl class="layui-anim layui-anim-upbit">
+                        <!-- <dl class="layui-anim layui-anim-upbit">
                           <dd
                             v-for="(item, index) in favList"
                             :key="index"
@@ -110,7 +76,7 @@
                           >
                             {{ item }}
                           </dd>
-                        </dl>
+                        </dl> -->
                       </div>
                     </div>
                     <div class="layui-form-mid layui-word-aux">发表后无法更改飞吻</div>
@@ -155,17 +121,22 @@ import { Field, Form } from 'vee-validate'
 import Uselogin from '@/hooks/Uselogin'
 import { useAppStore, useAuthStore } from '@/stores'
 import { myalert, myconfirm } from '../modules/alert'
-import { addPost } from '@/api/content'
+import { getDetail, UpdatePost } from '@/api/content'
 import type { HttpResponse } from '@/common/interface'
 import router from '@/router'
 import { popup } from '../modules/pop'
+
 const appStore = useAppStore()
 //封装函数
 const { state, _getCode, setid } = Uselogin()
 const { code, svg } = toRefs(state)
+interface Props {
+  tid: string //路由传参
+}
+//3.5写法
+const { tid } = defineProps<Props>()
+
 const state1 = reactive({
-  isSelect: false,
-  isSelect_fav: false,
   cataIndex: 0,
   favIndex: 0,
   catalogs: [
@@ -194,7 +165,7 @@ const state1 = reactive({
   content: '',
   title: '',
 })
-const { isSelect, isSelect_fav, cataIndex, favIndex, catalogs, favList, title } = toRefs(state1)
+const { cataIndex, favIndex, catalogs, favList, title } = toRefs(state1)
 //下拉菜单文字
 const selectedText = computed({
   get: () => catalogs.value[cataIndex.value]?.text ?? '',
@@ -206,58 +177,87 @@ const selectedText = computed({
 
 //解决预览时候偶尔双滚动条的问题
 const isHide = computed(() => appStore.isHide)
-const chooseCatalog = (item: object, index: number) => {
-  state1.cataIndex = index
-}
-const chooseFav = (item: number, index: number) => {
-  state1.favIndex = index
-}
-//发帖
+// const chooseCatalog = (item: object, index: number) => {
+//   state1.cataIndex = index
+// }
+// const chooseFav = (item: number, index: number) => {
+//   state1.favIndex = index
+// }
+//更新文章
 const submit = async () => {
   // 检测文章内容是否为空
   if (state1.content.trim() === '') {
     myalert('文章内容不得为空')
     return
   }
-  const result = await addPost({
+  const result = await UpdatePost({
+    tid: tid,
     title: state1.title,
-    catalog: state1.catalogs[state1.cataIndex]?.value || '',
     content: state1.content,
-    fav: state1.favList[state1.favIndex]!, //断定不为undefined
     code: state.code,
     sid: useAuthStore().sid,
   })
   //明确告知result就是HttpResponse类型
-  const { code, msg, data } = result as HttpResponse
+  const { code, msg } = result as HttpResponse
   if (code === 200) {
-    popup('发帖成功，2S后跳转')
-    localStorage.setItem('addData', '')
+    popup('编辑成功', '')
+    localStorage.setItem('editData', '')
     setTimeout(() => {
-      router.push({ name: 'detail', params: { tid: data._id } })
+      router.push({ name: 'detail', params: { tid: tid } })
     }, 2000)
   } else {
-    myalert(msg as string)
+    popup(msg as string, '')
+    // myalert(msg as string)
   }
 }
 //挂载时执行
 onMounted(() => {
+  console.log(tid)
+  // console.log(typeof appStore.currentPage._id !== 'undefined')
   setid()
   _getCode()
-  const saveData = localStorage.getItem('addData')
-  if (saveData && saveData != '') {
-    myconfirm(
-      '是否加载未编辑的内容',
-      () => {
-        const obj = JSON.parse(saveData)
-        state1.content = obj.content
-        state1.title = obj.title
-        state1.cataIndex = obj.cataIndex
-        state1.favIndex = obj.favIndex
-      },
-      () => {
-        localStorage.setItem('addData', '')
-      },
+  if (typeof appStore.currentPage._id !== 'undefined') {
+    state1.content = appStore.currentPage.content
+    state1.title = appStore.currentPage.title
+    state1.favIndex = favList.value.indexOf(parseInt(appStore.currentPage.fav))
+    state1.cataIndex = catalogs.value.findIndex(
+      (item) => item.value === appStore.currentPage.catalog,
     )
+    // 缓存内容
+    localStorage.setItem('editData', JSON.stringify(appStore.currentPage))
+  } else {
+    console.log('页面上无page内容')
+
+    // 页面上无page内容，可能是用户进行了刷新，则取本地缓存
+    const saveData = localStorage.getItem('editData')
+    if (saveData && saveData != '') {
+      myconfirm(
+        '是否加载未编辑的内容',
+        () => {
+          const obj = JSON.parse(saveData)
+          state1.content = obj.content
+          state1.title = obj.title
+          state1.cataIndex = obj.cataIndex
+          state1.favIndex = obj.favIndex
+        },
+        async () => {
+          //获取文章详情
+          const result = await getDetail(tid)
+          //明确告知result就是HttpResponse类型
+          const { code, data } = result as HttpResponse
+          if (code === 200) {
+            // console.log(data)
+            // state1.page = data
+            state1.content = data.content
+            state1.title = data.title
+            state1.favIndex = favList.value.indexOf(parseInt(data.fav))
+            state1.cataIndex = catalogs.value.findIndex((item) => item.value === data.catalog)
+          }
+          // add函数，组件初始化的时候会localStorage.setItem('editData', JSON.stringify(saveData))
+          // localStorage.removeItem('editData')
+        },
+      )
+    }
   }
 })
 // 添加文字
@@ -270,7 +270,7 @@ const add = (content: string) => {
     favIndex: state1.favIndex,
   }
   if (state1.title.trim() !== '' && state1.content.trim() !== '') {
-    localStorage.setItem('addData', JSON.stringify(saveData))
+    localStorage.setItem('editData', JSON.stringify(saveData))
   }
 
   // console.log('🚀 ~ add ~ content:', content)
