@@ -170,7 +170,12 @@
               <!-- 回帖内容 -->
               <div class="detail-body jieda-body photos" v-richtext="item.content"></div>
               <div class="jieda-reply">
-                <span class="jieda-zan" :class="{ zanok: item.handed === '1' }" type="zan">
+                <span
+                  class="jieda-zan"
+                  :class="{ zanok: item.handed === '1' }"
+                  type="zan"
+                  @click="hands(item)"
+                >
                   <i class="iconfont icon-zan"></i>
                   <em>{{ item.hands }}</em>
                 </span>
@@ -262,7 +267,7 @@ import pageination from '@/components/modules/pageination/Index.vue'
 import Uselogin from '@/hooks/Uselogin'
 import { Field, Form, type SubmissionContext } from 'vee-validate'
 import { getDetail } from '@/api/content.ts'
-import { addComment, getComments, setCommentBest, updateComment } from '@/api/comments.ts'
+import { addComment, getComments, setCommentBest, setHands, updateComment } from '@/api/comments.ts'
 import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
@@ -309,7 +314,7 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
   //用户没有登录
   const isLogin = AuthStore.isLogin
   if (!isLogin) {
-    popup('shake', '请先登录')
+    popup('请先登录', 'shake')
     return
   }
   const user = UserStore.userInfo
@@ -443,6 +448,24 @@ const setBest = (item: Comments, index: number) => {
     },
     () => {},
   )
+}
+//点赞
+const hands = async (item: Comments) => {
+  //用户没有登录
+  const isLogin = AuthStore.isLogin
+  if (!isLogin) {
+    popup('请先登录', 'shake')
+    return
+  }
+  const result = await setHands({ cid: item._id })
+  const { code, msg } = result as HttpResponse
+  if (code === 200) {
+    popup('点赞成功', '')
+    item.handed = '1'
+    item.hands += 1
+  } else {
+    popup(msg as string, 'shake')
+  }
 }
 //获取文章详情
 const getPostDetail = async () => {

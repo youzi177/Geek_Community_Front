@@ -1,10 +1,20 @@
 import type { CommentBestinfo, Commentinfo } from '@/common/interface'
 import axios from '@/common/request'
+import { useAuthStore } from '@/stores'
 import qs from 'qs'
-
+const AuthStore = useAuthStore()
 //获取文章评论数据
 const getComments = (param: Commentinfo) => {
-  return axios.get('/public/comments?' + qs.stringify(param))
+  const token = AuthStore.token
+  let headers = {}
+  if (token !== '') {
+    headers = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    }
+  }
+  return axios.get('/public/comments?' + qs.stringify(param), headers)
 }
 //添加评论
 const addComment = (data: Commentinfo) => {
@@ -18,4 +28,8 @@ const updateComment = (data: Commentinfo) => {
 const setCommentBest = (param: CommentBestinfo) => {
   return axios.get('/comments/accept?' + qs.stringify(param))
 }
-export { getComments, addComment, updateComment, setCommentBest }
+// 评论点赞setHands
+const setHands = (param: { cid: string }) => {
+  return axios.get('/comments/hands?' + qs.stringify(param))
+}
+export { getComments, addComment, updateComment, setCommentBest, setHands }
