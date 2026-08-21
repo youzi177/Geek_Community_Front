@@ -115,7 +115,13 @@
               v-show="page.isEnd === '0' && page.uid._id === user._id"
               >编辑</router-link
             >
-            <a href="" class="layui-btn layui-btn-sm jie-admin jieda-admin-colllect">收藏</a>
+            <a
+              href=""
+              class="layui-btn layui-btn-sm jieda-admin-colllect"
+              :class="{ 'layui-btn-primary': page.isFav }"
+              @click.prevent="setCollect"
+              >{{ page.isFav ? '取消收藏' : '收藏' }}</a
+            >
           </div>
           <div class="detail-body photos" v-html="replaceContent"></div>
         </div>
@@ -274,7 +280,14 @@ import pageination from '@/components/modules/pageination/Index.vue'
 import Uselogin from '@/hooks/Uselogin'
 import { Field, Form, type SubmissionContext } from 'vee-validate'
 import { getDetail } from '@/api/content.ts'
-import { addComment, getComments, setCommentBest, setHands, updateComment } from '@/api/comments.ts'
+import {
+  addCollect,
+  addComment,
+  getComments,
+  setCommentBest,
+  setHands,
+  updateComment,
+} from '@/api/comments.ts'
 import type { Article, Comments, HttpResponse } from '@/common/interface.ts'
 import { formatDate } from '@/utils/formatDate.ts'
 import { escapeHtml } from '@/utils/escapeHtml.ts'
@@ -315,7 +328,6 @@ onMounted(() => {
   _getCode()
   getPostDetail()
   getCommentsList()
-  // console.log(state1.page)
 })
 // 监听tid变化
 watch(
@@ -514,6 +526,26 @@ const reply = (item: Comments) => {
 const setPage = (page: Article) => {
   AppStore.setPage(page)
 }
+// 设置收藏
+const setCollect = async () => {
+  // 判断用户是否已经登录
+  const isLogin = AuthStore.isLogin
+  if (isLogin) {
+    const collect = {
+      tid,
+      title: page.value.title,
+      isFav: page.value.isFav ? true : false,
+    }
+    const result = await addCollect(collect)
+    const { code } = result as HttpResponse
+    if (code === 200) {
+      page.value.isFav = !page.value.isFav
+      popup(page.value.isFav ? '收藏成功' : '取消收藏成功', '')
+    }
+  } else {
+    popup('请先登录后再收藏')
+  }
+}
 //获取文章详情
 const getPostDetail = async () => {
   const result = await getDetail(tid)
@@ -522,6 +554,7 @@ const getPostDetail = async () => {
   if (code === 200) {
     // console.log(data)
     state1.page = data
+    console.log(page.value)
   }
 }
 //获取文章评论数据

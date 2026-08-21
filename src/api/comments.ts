@@ -1,4 +1,4 @@
-import type { CommentBestinfo, Commentinfo } from '@/common/interface'
+import type { Collectinfo, CommentBestinfo, Commentinfo } from '@/common/interface'
 import axios from '@/common/request'
 import { useAuthStore } from '@/stores'
 import qs from 'qs'
@@ -32,4 +32,12 @@ const setCommentBest = (param: CommentBestinfo) => {
 const setHands = (param: { cid: string }) => {
   return axios.get('/comments/hands?' + qs.stringify(param))
 }
-export { getComments, addComment, updateComment, setCommentBest, setHands }
+// 收藏贴子
+const addCollect = (param: Collectinfo) => {
+  return axios.get('/user/set-collect?' + qs.stringify(param))
+}
+//获取收藏列表
+const getCollect = (param: Collectinfo) => {
+  return axios.get('/user/collect?' + qs.stringify(param))
+}
+export { getComments, addComment, updateComment, setCommentBest, setHands, addCollect, getCollect }

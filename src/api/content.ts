@@ -1,6 +1,8 @@
 import type { getListInfo, PostData } from '@/common/interface'
 import axios from '@/common/request'
 import qs from 'qs'
+import { useAuthStore } from '@/stores'
+const AuthStore = useAuthStore()
 /**
  * 读取文章列表
  * @param options 读取文章列表参数
@@ -47,7 +49,16 @@ const addPost = (data: PostData) => {
 }
 //获取文章详情
 const getDetail = (tid: string) => {
-  return axios.get('/public/content/detail?tid=' + tid)
+  const token = AuthStore.token
+  let headers = {}
+  if (token !== '') {
+    headers = {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    }
+  }
+  return axios.get('/public/content/detail?tid=' + tid, headers)
 }
 //更新文章
 const UpdatePost = (data: PostData) => {
