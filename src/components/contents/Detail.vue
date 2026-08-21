@@ -160,7 +160,7 @@
                     >
                   </a> -->
 
-                  <span v-if="index === 0">(楼主)</span>
+                  <span v-if="current === 0 && index === 0">(楼主)</span>
                   <!--
                 <span style="color:#5FB878">(管理员)</span>
                 <span style="color:#FF9E3F">（社区之光）</span>
