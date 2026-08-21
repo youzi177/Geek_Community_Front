@@ -213,7 +213,7 @@
           </ul>
           <!-- 自定义分页组件 -->
           <pageination
-            :has-select="true"
+            :has-select="false"
             :hasTotal="true"
             :total="total"
             :size="size"
@@ -221,6 +221,7 @@
             :show-end="true"
             @change-current="handleChange"
             @changeLimit="handleLimit"
+            v-show="comments.length > 0 && total > 0"
           ></pageination>
           <div class="layui-form layui-form-pane">
             <Form @submit="submit" v-slot="{ errors }">
@@ -263,7 +264,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive, toRefs } from 'vue'
+import { computed, onMounted, reactive, toRefs, watch } from 'vue'
 import Panel from '../Panel.vue'
 import Ads from '../sidebar/Ads.vue'
 import HotList from '../sidebar/HotList.vue'
@@ -314,8 +315,18 @@ onMounted(() => {
   _getCode()
   getPostDetail()
   getCommentsList()
-  console.log(state1.page)
+  // console.log(state1.page)
 })
+// 监听tid变化
+watch(
+  () => tid,
+  () => {
+    setid()
+    _getCode()
+    getPostDetail()
+    getCommentsList()
+  },
+)
 const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
   const { setErrors } = actions
   //用户没有登录

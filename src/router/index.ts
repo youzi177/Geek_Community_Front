@@ -212,6 +212,32 @@ const router = createRouter({
       component: Edit,
       props: true,
       meta: { requiresAuth: true }, //路由元信息，需要登录才能进去的路由
+      beforeEnter: (to, from) => {
+        // console.log('🚀 ~ next:', next)
+        console.log('🚀 ~ from:', from)
+        console.log('🚀 ~ to:', to)
+        // 正常的情况下：
+        if (from.name === 'detail' && to.params.tid) {
+          // next()
+          return true
+        } else {
+          // 用户在edit页面刷新的情况
+          const editData = localStorage.getItem('editData')
+          if (editData && editData !== '') {
+            const editObj = JSON.parse(editData)
+            if (editObj.isEnd === '0') {
+              return true
+            } else {
+              return {
+                name: 'index',
+              }
+            }
+          }
+          return {
+            name: 'index',
+          }
+        }
+      },
     },
     // 帖子详情
     {

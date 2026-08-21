@@ -216,7 +216,8 @@ onMounted(() => {
   // console.log(typeof appStore.currentPage._id !== 'undefined')
   setid()
   _getCode()
-  if (typeof appStore.currentPage._id !== 'undefined') {
+  // 需要贴子未结帖并且有 page内容的情况下
+  if (typeof appStore.currentPage._id !== 'undefined' && appStore.currentPage.isEnd === '0') {
     state1.content = appStore.currentPage.content
     state1.title = appStore.currentPage.title
     state1.favIndex = favList.value.indexOf(parseInt(appStore.currentPage.fav))
@@ -231,10 +232,18 @@ onMounted(() => {
     // 页面上无page内容，可能是用户进行了刷新，则取本地缓存
     const saveData = localStorage.getItem('editData')
     if (saveData && saveData != '') {
+      const obj = JSON.parse(saveData)
+      // 取缓存之前应该判断缓存文章ID是不是当前贴子ID
+      // console.log('🚀 ~ tid:', tid)
+      // console.log('🚀 ~ obj._id:', obj._id)
+      if (tid !== obj._id) {
+        localStorage.removeItem('editData')
+        router.push({ name: 'index' })
+        return
+      }
       myconfirm(
         '是否加载未编辑的内容',
         () => {
-          const obj = JSON.parse(saveData)
           state1.content = obj.content
           state1.title = obj.title
           state1.cataIndex = obj.cataIndex
@@ -248,6 +257,7 @@ onMounted(() => {
           if (code === 200) {
             // console.log(data)
             // state1.page = data
+
             state1.content = data.content
             state1.title = data.title
             state1.favIndex = favList.value.indexOf(parseInt(data.fav))
@@ -257,6 +267,12 @@ onMounted(() => {
           // localStorage.removeItem('editData')
         },
       )
+    } else {
+      popup('非法操作', '')
+      // 解决低概率URL跳转但是页面没跳转问题
+      setTimeout(() => {
+        router.push({ name: 'index' })
+      }, 0)
     }
   }
 })
@@ -270,7 +286,16 @@ const add = (content: string) => {
     favIndex: state1.favIndex,
   }
   if (state1.title.trim() !== '' && state1.content.trim() !== '') {
-    localStorage.setItem('editData', JSON.stringify(saveData))
+    //拼接
+    const editData = localStorage.getItem('editData')
+    let newObj = {}
+
+    if (editData && editData !== '') {
+      newObj = { ...JSON.parse(editData), ...saveData }
+    }
+    // console.log('🚀 ~ add ~ newObj:', newObj)
+
+    localStorage.setItem('editData', JSON.stringify(newObj))
   }
 
   // console.log('🚀 ~ add ~ content:', content)

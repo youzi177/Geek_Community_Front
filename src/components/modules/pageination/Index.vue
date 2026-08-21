@@ -269,6 +269,9 @@ const next = () => {
   margin-left: 20px;
   position: relative;
   top: -2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .fluff-input {
   width: 30px;

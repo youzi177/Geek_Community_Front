@@ -120,7 +120,10 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
     state.code = ''
     actions.resetForm() //清除错误信息
     console.log('准备跳转, isLogin:', AuthStore.isLogin, 'token:', AuthStore.token)
-    await router.push({ name: 'index' })
+    // 解决低概率URL跳转但是页面没跳转问题，概率发生在打开调试的页面
+    setTimeout(() => {
+      router.push({ name: 'index' })
+    }, 0)
     console.log('跳转完成，当前路由:', router.currentRoute.value.name)
   } else if (code === 401) {
     setErrors({
