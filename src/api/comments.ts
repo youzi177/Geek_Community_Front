@@ -36,8 +36,5 @@ const setHands = (param: { cid: string }) => {
 const addCollect = (param: Collectinfo) => {
   return axios.get('/user/set-collect?' + qs.stringify(param))
 }
-//获取收藏列表
-const getCollect = (param: Collectinfo) => {
-  return axios.get('/user/collect?' + qs.stringify(param))
-}
-export { getComments, addComment, updateComment, setCommentBest, setHands, addCollect, getCollect }
+
+export { getComments, addComment, updateComment, setCommentBest, setHands, addCollect }

@@ -267,8 +267,8 @@ const next = () => {
 .total {
   color: rgba(51, 51, 51, 1);
   margin-left: 20px;
-  position: relative;
-  top: -2px;
+  // position: relative;
+  // top: -2px;
   display: flex;
   justify-content: center;
   align-items: center;

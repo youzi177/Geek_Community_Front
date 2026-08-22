@@ -219,7 +219,7 @@
           </ul>
           <!-- 自定义分页组件 -->
           <pageination
-            :has-select="false"
+            :has-select="true"
             :hasTotal="true"
             :total="total"
             :size="size"

@@ -1,4 +1,4 @@
-import type { UserInfo } from '@/common/interface'
+import type { Collectinfo, UserInfo } from '@/common/interface'
 import axios from '@/common/request'
 import qs from 'qs'
 
@@ -18,5 +18,24 @@ const updateUsername = (data: { username: string }) => {
 const changePassword = (data: { oldpwd: string; newpwd: string }) => {
   return axios.post('user/changePassword', data)
 }
-
-export { userSign, updateUserInfo, updateUsername, changePassword }
+// 获取发表过的文章
+const getPostListByUid = (param: { page: number; limit: number }) => {
+  return axios.get('/user/post?' + qs.stringify(param))
+}
+// 删除贴子
+const deletPostByUid = (param: { tid: string }) => {
+  return axios.get('/user/delet-post?' + qs.stringify(param))
+}
+//获取收藏列表
+const getCollect = (param: Collectinfo) => {
+  return axios.get('/user/collect?' + qs.stringify(param))
+}
+export {
+  userSign,
+  updateUserInfo,
+  updateUsername,
+  changePassword,
+  getPostListByUid,
+  deletPostByUid,
+  getCollect,
+}

@@ -217,7 +217,10 @@ const router = createRouter({
         console.log('🚀 ~ from:', from)
         console.log('🚀 ~ to:', to)
         // 正常的情况下：
-        if (from.name === 'detail' && to.params.tid) {
+        if (
+          (from.name === 'detail' && to.params.tid) ||
+          (from.name === 'mypost' && to.params.tid)
+        ) {
           // next()
           return true
         } else {

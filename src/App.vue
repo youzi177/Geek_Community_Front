@@ -82,7 +82,7 @@ import '@/assets/layui/css/modules/layer/default/layer.css'
 // 分页组件
 .d-flex {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   align-items: center;
   &.flex-start {
     justify-content: flex-start;

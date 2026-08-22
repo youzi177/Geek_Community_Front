@@ -96,6 +96,7 @@ export interface Article {
   _id: string
   uid: UserInfoArt
   isFav: boolean //收藏
+  tid: string
 }
 
 //评论数据
@@ -128,7 +129,9 @@ export interface CommentBestinfo {
 }
 // 收藏
 export interface Collectinfo {
-  tid: string
-  title: string
-  isFav: boolean
+  tid?: string
+  title?: string
+  isFav?: boolean
+  page?: number
+  limit?: number
 }
