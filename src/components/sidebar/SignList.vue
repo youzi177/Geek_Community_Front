@@ -9,20 +9,28 @@
       <div class="layui-layer-content pd0">
         <div class="layui-tab layui-tab-brief">
           <ul class="layui-tab-title">
-            <li :class="{ 'layui-this': current === 0 }" @click="choose(0)">最新签到</li>
+            <li :class="{ 'layui-this': current === 2 }" @click="choose(2)">最新签到</li>
             <li :class="{ 'layui-this': current === 1 }" @click="choose(1)">今日最快</li>
-            <li :class="{ 'layui-this': current === 2 }" @click="choose(2)">总签到榜</li>
+            <li :class="{ 'layui-this': current === 0 }" @click="choose(0)">总签到榜</li>
           </ul>
-          <div class="layui-tab-content">
+          <div class="layui-tab-content fly-signin-list">
             <ul class="layui-tab-item layui-show">
-              <li v-for="(item, index) in lists" :key="index">
-                <img src="../../assets/images/avatar/11.jpg" alt="" class="mr1" />
-                <cite class="fly-link">{{ item.name }}</cite>
-                <span class="fly-grey" v-if="current !== 2">签到于{{ item.created }}</span>
-                <span class="fly-grey" v-else
-                  >已经连续签到<i class="orange">{{ item.count }}</i
-                  >天</span
+              <li class="sign-item" v-for="(item, index) in lists" :key="'sign' + index">
+                <img
+                  v-if="current === 0"
+                  :src="item.pic ? item.pic : '/img/header.jpg'"
+                  class="mr1"
+                />
+                <img v-else :src="item.uid ? item.uid.pic : '/img/bear-200-200.jpg'" class="mr1" />
+                <cite class="fly-link">{{ item.name ? item.name : item.uid.name }}</cite>
+                <span class="fly-grey" v-if="current !== 0"
+                  >签到于 {{ formatDate(item.created) }}</span
                 >
+                <span class="fly-grey" v-else>
+                  已经连续签到
+                  <i class="orange">{{ item.count }}</i
+                  >天
+                </span>
               </li>
             </ul>
           </div>
@@ -33,19 +41,53 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { getHotSignRecord } from '@/api/hot'
+import type { HttpResponse } from '@/common/interface'
+import { formatDate } from '@/utils/formatDate'
+import { onMounted, reactive, toRefs } from 'vue'
 
 interface Props {
   isShow: boolean
-  lists: { name: string; count: number; created: string }[]
+  // lists: { name: string; count: number; created: string }[]
 }
 //3.5写法
-const { isShow = false, lists } = defineProps<Props>()
-const current = ref(0) //状态量
+const { isShow = false } = defineProps<Props>()
+// const current = ref(0) //状态量
+// const limit = ref(20)
+// const page = ref(20)
+
+const state = reactive({
+  lists: [] as {
+    name: string
+    count: number
+    created: string
+    pic: string
+    uid: { pic: string; name: string }
+  }[],
+  page: 0,
+  limit: 20,
+  current: 0,
+})
+const { lists, page, limit, current } = toRefs(state)
+onMounted(() => {
+  getList()
+})
 //签到榜单切换
-const choose = (val: number) => {
+const choose = async (val: number) => {
   current.value = val
   //请求后台数据
+  getList()
+}
+const getList = async () => {
+  const result = await getHotSignRecord({
+    page: page.value,
+    limit: limit.value,
+    index: current.value,
+  })
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    lists.value = data
+  }
 }
 //emit一个closeModal事件
 const emit = defineEmits(['closeModal'])
@@ -56,4 +98,20 @@ const close = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.sign-item {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.fly-link {
+  flex: 1;
+  display: inline-block;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

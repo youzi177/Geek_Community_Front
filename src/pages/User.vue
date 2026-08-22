@@ -18,6 +18,7 @@
     <span style="color:#5FB878;">（社区之光）</span>
     <span>（该号已被封）</span>
     -->
+        <span v-if="userInfo.status === '1'">（该号已被禁言）</span>
       </h1>
 
       <!-- <p style="padding: 10px 0; color: #5fb878">认证信息：layui 作者</p> -->

@@ -31,7 +31,7 @@
       </template>
     </div>
     <SignInfo @closeModal="close" :is-show="isShow"></SignInfo>
-    <SignList @closeModal="close" :is-show="showList" :lists="lists"></SignList>
+    <SignList @closeModal="close" :is-show="showList"></SignList>
   </div>
 </template>
 
@@ -54,10 +54,10 @@ const state = reactive({
   showList: false, //签到榜单状态
   isLogin: computed(() => authStore.isLogin), //登录状态
   isSign: computed(() => userStore.userInfo.isSign), //签到状态
-  lists: [], //这个应该放到SignList组件 //签到榜单的数据
+  // lists: [], //这个应该放到SignList组件 //签到榜单的数据
   msg: '', //按钮显示文字
 })
-const { isShow, showList, isLogin, isSign, lists, msg } = toRefs(state)
+const { isShow, showList, isLogin, isSign, msg } = toRefs(state)
 
 onMounted(() => {
   //判断用户的上一次签到时间与签到状态

@@ -295,6 +295,7 @@ import { popup } from '../modules/pop/index.tsx'
 import { useAppStore, useAuthStore, useUserStore } from '@/stores/index.ts'
 import { myalert, myconfirm } from '../modules/alert/index.tsx'
 import { scrollToElem } from '@/utils/common.ts'
+import { getInfo } from '@/api/user.ts'
 const AuthStore = useAuthStore()
 const UserStore = useUserStore()
 const AppStore = useAppStore()
@@ -328,6 +329,7 @@ onMounted(() => {
   _getCode()
   getPostDetail()
   getCommentsList()
+  getUserInfo()
 })
 // 监听tid变化
 watch(
@@ -337,8 +339,19 @@ watch(
     _getCode()
     getPostDetail()
     getCommentsList()
+    getUserInfo()
   },
 )
+// 用户基本信息
+const getUserInfo = async () => {
+  const result = await getInfo({
+    uid: UserStore.userInfo._id,
+  })
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    UserStore.userInfo = data
+  }
+}
 const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {
   const { setErrors } = actions
   //用户没有登录
@@ -354,7 +367,8 @@ const submit = async (value: Record<string, unknown>, actions: SubmissionContext
     name: user.name,
     isVip: user.isVip,
   }
-  // 用户是否禁言
+  // 用户是否禁言,如果登录的时候没有禁言，登录之后中间这个时间被禁言，status从缓存取，有Bug
+  // 需要重新请求更新一下userinfo->getUserInfo()
   if (user.status !== '0') {
     popup('用户已经被禁言，请联系管理员', 'shake')
     return
