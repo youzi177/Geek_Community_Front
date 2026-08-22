@@ -554,7 +554,6 @@ const getPostDetail = async () => {
   if (code === 200) {
     // console.log(data)
     state1.page = data
-    console.log(page.value)
   }
 }
 //获取文章评论数据

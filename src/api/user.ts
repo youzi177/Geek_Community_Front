@@ -30,6 +30,16 @@ const deletPostByUid = (param: { tid: string }) => {
 const getCollect = (param: Collectinfo) => {
   return axios.get('/user/collect?' + qs.stringify(param))
 }
+// 获取用户基本信息
+const getInfo = (param: { uid: string }) => {
+  return axios.get('/public/info?' + qs.stringify(param))
+}
+// 获取用户最近的发表文章列表
+const getPostPublic = (data: { uid: string; page: number; limit: number }) =>
+  axios.get('/public/latestPost?' + qs.stringify(data))
+// 获取用户最近评论列表
+const getCommentPublic = (data: { uid: string; page: number; limit: number }) =>
+  axios.get('/public/latestComment?' + qs.stringify(data))
 export {
   userSign,
   updateUserInfo,
@@ -38,4 +48,7 @@ export {
   getPostListByUid,
   deletPostByUid,
   getCollect,
+  getInfo,
+  getPostPublic,
+  getCommentPublic,
 }

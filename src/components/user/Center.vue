@@ -7,8 +7,12 @@
         <div class="panel border">
           <div class="title">我的会员信息</div>
           <div class="content fly-signin">
-            <p>积分经验值：<cite>60 </cite></p>
-            <p>您当前为:<cite>非VIP</cite></p>
+            <p>
+              积分经验值：<cite>{{ userInfo.favs }} </cite>
+            </p>
+            <p>
+              您当前为:<cite>{{ userInfo.isVip === '0' ? '非VIP' : 'VIP' + userInfo.isVip }}</cite>
+            </p>
           </div>
         </div>
       </div>
@@ -36,8 +40,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Sign from '../sidebar/Sign.vue'
+import type { HttpResponse } from '@/common/interface.ts'
+import { useUserStore } from '@/stores/user.ts'
+import { getInfo } from '@/api/user.ts'
+const UserStore = useUserStore()
 const lists = ref([
   {
     name: '修改信息',
@@ -100,6 +108,23 @@ const lists = ref([
     link: '',
   },
 ])
+onMounted(() => {
+  getUserInfo()
+})
+const userInfo = computed(() => {
+  return UserStore.userInfo
+})
+const getUserInfo = async () => {
+  const result = await getInfo({
+    uid: UserStore.userInfo._id,
+  })
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    // 这里虽然更新整个UserInfo，但是该方法，只在有数据更新的时候更新，没有更新的保持不变
+    // 比如isSign在登录的时候有，则保存，但是这个接口没有返回isSign，则采用登录的时候isSign，不会消失或者改变
+    UserStore.setUserInfo(data)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

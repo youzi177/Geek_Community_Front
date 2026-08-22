@@ -38,6 +38,7 @@ export interface UserInfo {
   lastSign?: string
   count?: number
   favs?: number
+  isVip?: string
 }
 export interface ResetInfo {
   key: string | null
@@ -111,6 +112,7 @@ export interface Comments {
   status: string
   handed: string //是否点赞0：未点赞，1：已经点赞
   _id: string
+  tid: Article
 }
 //添加评论数据
 export interface Commentinfo {

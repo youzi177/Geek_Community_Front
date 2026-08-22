@@ -253,6 +253,7 @@ const router = createRouter({
     {
       path: '/404',
       component: NoFound,
+      name: '404',
     },
     // 匹配所有不存在的路由
     {
