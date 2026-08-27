@@ -112,7 +112,7 @@
               :to="{ name: 'edit', params: { tid: tid } }"
               @click="setPage(page)"
               class="layui-btn layui-btn-sm jie-admin"
-              v-show="page.isEnd === '0' && page.uid._id === user._id"
+              v-show="page.isEnd === '0' && page.uid._id === user?._id"
               >编辑</router-link
             >
             <a
@@ -199,7 +199,9 @@
                   <span
                     type="edit"
                     @click="editComent(item)"
-                    v-show="page.isEnd === '0' && item.cuid._id === user._id && user.status === '0'"
+                    v-show="
+                      page.isEnd === '0' && item.cuid._id === user?._id && user?.status === '0'
+                    "
                     >编辑</span
                   >
                   <!-- <span type="del">删除</span> -->
@@ -207,7 +209,9 @@
                     class="jieda-accept"
                     type="accept"
                     @click="setBest(item, index)"
-                    v-show="page.isEnd === '0' && page.uid._id === user._id && user.status === '0'"
+                    v-show="
+                      page.isEnd === '0' && page.uid._id === user?._id && user?.status === '0'
+                    "
                     >采纳</span
                   >
                 </div>

@@ -43,7 +43,7 @@ const getCommentPublic = (data: { uid: string; page: number; limit: number }) =>
 
 // 获取用户未读消息
 const getMsg = (param: { page: number; limit: number }) => {
-  return axios.get('/user/msg?' + qs.stringify(param))
+  return axios.get('/user/getmsg?' + qs.stringify(param))
 }
 export {
   userSign,
