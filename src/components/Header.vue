@@ -73,6 +73,15 @@
                 </dd>
               </dl>
             </li>
+            <div class="fly-nav-msg">1</div>
+            <Transition name="fade">
+              <div class="layui-layer-tips" v-show="hasMsg">
+                <div class="layui-layer-content">
+                  您有一条未读消息
+                  <i class="layui-layer-TipsG layui-layer-TipsB"></i>
+                </div>
+              </div>
+            </Transition>
           </template>
         </ul>
       </div>
@@ -105,6 +114,7 @@ const userInfo = computed(() => {
   )
 })
 const ishover = ref(false)
+const hasMsg = ref(true)
 const hoverCtrl = ref<ReturnType<typeof setTimeout> | null>(null)
 //鼠标移入的时候显示
 const show = () => {
@@ -144,8 +154,15 @@ const logout = () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .fly-logo {
   left: -20px;
+}
+.layui-layer-tips {
+  position: absolute;
+  white-space: nowrap;
+  right: 0;
+  top: 60px;
+  z-index: 2000;
 }
 </style>

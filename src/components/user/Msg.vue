@@ -29,11 +29,59 @@
             </p>
           </li>
         </ul>
+        <pageination
+          :has-select="true"
+          :hasTotal="true"
+          :total="total"
+          :size="size"
+          :current="page"
+          :show-end="true"
+          :align="'center'"
+          @change-current="handleChange"
+          @changeLimit="handleLimit"
+          v-show="total > 0"
+        ></pageination>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { getMsg } from '@/api/user'
+import type { HttpResponse } from '@/common/interface'
+import { onMounted, reactive, toRefs } from 'vue'
+import pageination from '@/components/modules/pageination/Index.vue'
+const state = reactive({
+  lists: [],
+  page: 0,
+  limit: 10,
+  total: 0,
+  size: 10,
+})
+const { lists, page, limit, total, size } = toRefs(state)
+const gerMsgAll = async () => {
+  const result = await getMsg({ page: page.value, limit: limit.value })
+  const { code, data } = result as HttpResponse
+  if (code === 200) {
+    lists.value = data
+  }
+}
+//翻页事件
+const handleChange = (val: number) => {
+  page.value = val
+  gerMsgAll()
+}
+// 选择一页多少条
+const handleLimit = (limit: number, newCurrent?: number) => {
+  state.limit = limit
+  if (newCurrent !== undefined) {
+    page.value = newCurrent
+  }
+  gerMsgAll()
+}
+onMounted(() => {
+  gerMsgAll()
+})
+</script>
 
 <style></style>
