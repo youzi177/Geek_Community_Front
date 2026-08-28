@@ -30,6 +30,8 @@ class WebSocketClient {
   private protocol: string
   private authStore: AuthStore // 保存 auth store 实例
   private websocketStore: WebsocketStore // 保存 websocket store 实例
+  private handle: ReturnType<typeof setTimeout> | undefined
+  private timeInterval: number
   constructor(
     config: Partial<WebSocketConfig> = {},
     authStore: AuthStore,
@@ -39,6 +41,7 @@ class WebSocketClient {
       url: '127.0.0.1',
       port: 3001,
       protocol: 'ws',
+      timeInterval: 3 * 1000,
     }
     // 最终配置
     const finalConfig = { ...defaultConfig, ...config }
@@ -47,6 +50,7 @@ class WebSocketClient {
     this.protocol = finalConfig.protocol
     this.authStore = authStore
     this.websocketStore = websocketStore
+    this.timeInterval = finalConfig.timeInterval
   }
 
   // 初始化
@@ -70,6 +74,7 @@ class WebSocketClient {
         message: 'Bearer ' + this.authStore.token,
       }),
     )
+    this.cheackServer()
   }
   //接收服务端消息
   onMessage(event: MessageEvent) {
@@ -79,7 +84,7 @@ class WebSocketClient {
       case 'noauth':
         break
       case 'heartbeat':
-        // cheackServer() //客户端如果挂了，会一直重连
+        this.cheackServer() //客户端如果挂了，会一直重连
         this.ws?.send(
           JSON.stringify({
             event: 'heartbeat',
@@ -107,6 +112,14 @@ class WebSocketClient {
     setTimeout(() => {
       this.init()
     }, 1000)
+  }
+  //断线重连
+  cheackServer() {
+    clearTimeout(this.handle)
+    this.handle = setTimeout(() => {
+      this.onClose()
+      this.onError()
+    }, this.timeInterval + 500) //这里1000是心跳检测时间，500是网络延时
   }
 }
 export default WebSocketClient
