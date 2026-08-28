@@ -45,6 +45,10 @@ const getCommentPublic = (data: { uid: string; page: number; limit: number }) =>
 const getMsg = (param: { page: number; limit: number }) => {
   return axios.get('/user/getmsg?' + qs.stringify(param))
 }
+// 设置用户未读消息
+const setMsg = (param?: { id: string }) => {
+  return axios.get('/user/setmsg?' + qs.stringify(param))
+}
 export {
   userSign,
   updateUserInfo,
@@ -57,4 +61,5 @@ export {
   getPostPublic,
   getCommentPublic,
   getMsg,
+  setMsg,
 }

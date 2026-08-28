@@ -137,3 +137,13 @@ export interface Collectinfo {
   page?: number
   limit?: number
 }
+// 我的消息
+export interface Msginfo {
+  cuid: UserInfoArt
+  title: string
+  comntent: string
+  created: string
+  tid: Article
+  _id: string
+  content: string
+}

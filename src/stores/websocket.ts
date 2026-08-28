@@ -8,12 +8,16 @@ export interface WebSocketConfig {
   protocol: string
   timeInterval: number
 }
+export interface payload {
+  event?: string
+  message: number
+}
 export const useWebsocketStore = defineStore('websocket', {
   //存数据的地方
   state() {
     return {
       ws: null as WebSocketClient | null,
-      num: 0,
+      num: {} as payload,
     }
   },
   //actions里面放置的是一个一个的方法，用于响应组件中的“动作”
@@ -41,9 +45,8 @@ export const useWebsocketStore = defineStore('websocket', {
       }
     },
     //
-    setMessage(payload: { event: string; message: number }) {
-      // 传过来是string，转为int
-      this.num = payload.message
+    setMessage(payload: { event?: string; message: number }) {
+      this.num = payload
     },
   },
 

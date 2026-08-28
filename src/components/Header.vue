@@ -73,11 +73,13 @@
                 </dd>
               </dl>
             </li>
-            <div class="fly-nav-msg" v-show="num !== 0">{{ num }}</div>
+            <div class="fly-nav-msg" v-show="num?.message && num.message !== 0">
+              {{ num?.message }}
+            </div>
             <Transition name="fade">
               <div class="layui-layer-tips" v-show="hasMsg">
                 <div class="layui-layer-content">
-                  您有{{ num }}条未读消息
+                  您有{{ num?.message }}条未读消息
                   <i class="layui-layer-TipsG layui-layer-TipsB"></i>
                 </div>
               </div>
@@ -106,7 +108,7 @@ watch(
     console.log('🚀 ~ oldval:', oldval)
     console.log('🚀 ~ newval:', newval)
 
-    if (newval !== oldval) {
+    if (newval.event && newval !== oldval && newval.message !== 0) {
       hasMsg.value = true
       setTimeout(() => {
         hasMsg.value = false
