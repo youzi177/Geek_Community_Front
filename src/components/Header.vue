@@ -73,11 +73,11 @@
                 </dd>
               </dl>
             </li>
-            <div class="fly-nav-msg">1</div>
+            <div class="fly-nav-msg" v-show="num !== 0">{{ num }}</div>
             <Transition name="fade">
               <div class="layui-layer-tips" v-show="hasMsg">
                 <div class="layui-layer-content">
-                  您有一条未读消息
+                  您有{{ num }}条未读消息
                   <i class="layui-layer-TipsG layui-layer-TipsB"></i>
                 </div>
               </div>
@@ -90,14 +90,30 @@
 </template>
 
 <script lang="ts" setup>
-import { useAuthStore, useUserStore } from '@/stores'
-import { computed, ref } from 'vue'
+import { useAuthStore, useUserStore, useWebsocketStore } from '@/stores'
+import { computed, ref, watch } from 'vue'
 import { myconfirm } from './modules/alert'
 import router from '@/router'
+import { storeToRefs } from 'pinia'
 //pinia
 const AuthStore = useAuthStore()
 const UserStore = useUserStore()
+const WebsocketStore = useWebsocketStore()
+const { num } = storeToRefs(WebsocketStore)
+watch(
+  () => num.value,
+  (newval, oldval) => {
+    console.log('🚀 ~ oldval:', oldval)
+    console.log('🚀 ~ newval:', newval)
 
+    if (newval !== oldval) {
+      hasMsg.value = true
+      setTimeout(() => {
+        hasMsg.value = false
+      }, 2000)
+    }
+  },
+)
 //是否登录
 const isShow = computed(() => {
   return AuthStore.isLogin
@@ -114,7 +130,8 @@ const userInfo = computed(() => {
   )
 })
 const ishover = ref(false)
-const hasMsg = ref(true)
+const hasMsg = ref(false)
+
 const hoverCtrl = ref<ReturnType<typeof setTimeout> | null>(null)
 //鼠标移入的时候显示
 const show = () => {

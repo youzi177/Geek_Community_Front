@@ -24,13 +24,16 @@ export const useWebsocketStore = defineStore('websocket', {
       this.ws.init()
     },
     // 统一处理 WebSocket 事件
-    handleSocketEvent(event: string, payload: string) {
-      // console.log(event, payload)
-
+    handleSocketEvent(event: string, payload: { event: string; message: number }) {
+      console.log('🚀 ~ payload:', payload)
       switch (event) {
         case 'message':
           // 处理消息
           this.setMessage(payload)
+          break
+        case 'auth':
+          // 处理消息
+          // this.setMessage(payload)
           break
         // ... 其他事件
         default:
@@ -38,9 +41,9 @@ export const useWebsocketStore = defineStore('websocket', {
       }
     },
     //
-    setMessage(val: string) {
+    setMessage(payload: { event: string; message: number }) {
       // 传过来是string，转为int
-      this.num = parseInt(val)
+      this.num = payload.message
     },
   },
 
