@@ -1,5 +1,6 @@
 import { useAuthStore, useUserStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
+import { useWebsocketStore } from '@/stores'
 
 const HomeView = () => import('@/pages/home.vue')
 const login = () => import('@/pages/login.vue')
@@ -267,6 +268,7 @@ router.beforeEach((to) => {
   //pinia
   const AuthStore = useAuthStore()
   const UserStore = useUserStore()
+  const WebsocketStore = useWebsocketStore()
   //第一种解决方式：
   // if (to.name === 'login') {
   //   return true
@@ -282,6 +284,10 @@ router.beforeEach((to) => {
       AuthStore.setToken(token)
       UserStore.setUserInfo(userInfo)
       AuthStore.setisLogin(true)
+      // 登录成功才去初始化ws
+      if (!WebsocketStore.ws) {
+        WebsocketStore.initWebSocket({})
+      }
       return true
     } else {
       localStorage.clear()
