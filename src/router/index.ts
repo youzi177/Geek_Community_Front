@@ -288,6 +288,12 @@ router.beforeEach((to) => {
       if (!WebsocketStore.ws) {
         WebsocketStore.initWebSocket({})
       }
+      // 已经登录的，不允许再进入登录页面
+      if (to.path === '/login' || to.path === '/reg' || to.path === 'forget') {
+        return {
+          name: 'index',
+        }
+      }
       return true
     } else {
       localStorage.clear()
