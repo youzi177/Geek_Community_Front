@@ -291,6 +291,13 @@ router.beforeEach((to) => {
       return true
     } else {
       localStorage.clear()
+      AuthStore.setisLogin(false) // 确保 store 中 isLogin=false, token=null
+      UserStore.clearUserInfo()
+      // 可选：关闭 WebSocket
+      // WebsocketStore.closeWebSocket()
+      return {
+        name: 'login',
+      }
     }
   }
   //第二种：
