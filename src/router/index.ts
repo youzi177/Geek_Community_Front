@@ -296,7 +296,8 @@ router.beforeEach((to) => {
       }
       return true
     } else {
-      localStorage.clear()
+      // localStorage.clear() //会把sid删除，导致一直生成新的sid
+      localStorage.removeItem('token')
       AuthStore.setisLogin(false) // 确保 store 中 isLogin=false, token=null
       UserStore.clearUserInfo()
       // 可选：关闭 WebSocket
