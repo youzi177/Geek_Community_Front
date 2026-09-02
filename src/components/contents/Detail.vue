@@ -333,7 +333,7 @@ onMounted(() => {
   _getCode()
   getPostDetail()
   getCommentsList()
-  getUserInfo()
+  getUserInfo() //why getUserInfo？登录的时候，token没过期的时候被禁言，这是尽可能最快的生效，保持用户状态为最新
 })
 // 监听tid变化
 watch(
@@ -348,12 +348,15 @@ watch(
 )
 // 用户基本信息
 const getUserInfo = async () => {
-  const result = await getInfo({
-    uid: UserStore.userInfo._id,
-  })
-  const { code, data } = result as HttpResponse
-  if (code === 200) {
-    UserStore.userInfo = data
+  // 有信息，登录的时候才去发请求，没登录的时候点击文章详情不请求
+  if (UserStore.userInfo._id) {
+    const result = await getInfo({
+      uid: UserStore.userInfo._id,
+    })
+    const { code, data } = result as HttpResponse
+    if (code === 200) {
+      UserStore.userInfo = data
+    }
   }
 }
 const submit = async (value: Record<string, unknown>, actions: SubmissionContext) => {

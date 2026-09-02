@@ -38,7 +38,7 @@ class WebSocketClient {
     websocketStore: WebsocketStore,
   ) {
     const defaultConfig = {
-      url: '127.0.0.1',
+      url: '192.168.2.138',
       port: 3001,
       protocol: 'ws',
       timeInterval: 3 * 1000,
