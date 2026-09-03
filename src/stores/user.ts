@@ -13,6 +13,7 @@ interface UserInfo {
   regmark: string
   _id: string
   status: string
+  roles: []
 }
 export const useUserStore = defineStore('user', {
   state() {
