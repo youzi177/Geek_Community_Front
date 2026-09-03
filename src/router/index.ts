@@ -249,6 +249,10 @@ const router = createRouter({
       name: 'detail',
       component: Detail,
       props: true,
+      meta: {
+        // 通过后台接口动态添加到路由，addRoutes
+        types: ['get', 'add', 'edit', 'delete'],
+      },
     },
     // 404页面
     {

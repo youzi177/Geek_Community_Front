@@ -50,11 +50,20 @@
               >{{ tag.name }}</span
             >
             <!-- admin -->
+            <!-- 按钮级别权限 -->
             <div v-hasRole="'admin'">
-              <div class="fly-admin-box" data-id="123">
-                <span class="layui-btn layui-btn-xs jie-admin" type="del">删除</span>
+              <div class="fly-admin-box">
+                <!-- 操作级别权限 -->
+                <span class="layui-btn layui-btn-xs jie-admin" v-hasPermission="['delete']"
+                  >删除</span
+                >
 
-                <span class="layui-btn layui-btn-xs jie-admin" type="set" field="stick" rank="1"
+                <span
+                  class="layui-btn layui-btn-xs jie-admin"
+                  type="set"
+                  field="stick"
+                  rank="1"
+                  v-if="page.isTop === '0'"
                   >置顶</span
                 >
                 <span
@@ -63,10 +72,11 @@
                   field="stick"
                   rank="0"
                   style="background-color: #ccc"
+                  v-else
                   >取消置顶</span
                 >
 
-                <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="1"
+                <!-- <span class="layui-btn layui-btn-xs jie-admin" type="set" field="status" rank="1"
                   >加精</span
                 >
                 <span
@@ -76,7 +86,7 @@
                   rank="0"
                   style="background-color: #ccc"
                   >取消加精</span
-                >
+                > -->
               </div>
               <span class="fly-list-nums">
                 <a href="#comment"
@@ -629,5 +639,9 @@ const getCommentsList = async () => {
 // 回帖-消灭0回复居中问题
 .layui-elem-field legend {
   margin-left: 0;
+}
+.fly-admin-box {
+  margin-left: 0px;
+  margin-top: 15px;
 }
 </style>
